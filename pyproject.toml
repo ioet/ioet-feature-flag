@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ioet-featureflags"
+version = "0.1.0"
+description = ""
+authors = ["ioet <info@ioet.com>"]
+readme = "README.md"
+packages = [{include = "ioet_featureflags"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sample-helper-aws-appconfig = "^2.0.3"
+pytest = "^7.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
