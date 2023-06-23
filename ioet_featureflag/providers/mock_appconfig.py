@@ -1,7 +1,7 @@
 import typing
-from provider import Provider
+from ioet_featureflag.providers.base_provider import Provider
 
-class AWSAppConfigProvider(Provider):
+class MockAppconfig(Provider):
     def __init__(
         self,
         config: typing.Dict = {}
