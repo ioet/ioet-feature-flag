@@ -1,7 +1,7 @@
 name: Feature-Flag-Continues-Deployment
 
 on:
-    pull_request:
+    push:
         branches: [ main ]
 
 jobs:
@@ -33,4 +33,4 @@ jobs:
                 key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
 
             - name: Install dependencies
-              run: python -m poetry install`
+              run: python -m poetry install
