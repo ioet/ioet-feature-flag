@@ -1,6 +1,6 @@
 import typing
 
-from provider import Provider
+from .providers import Provider
 
 class FeatureFlags:
     def __init__(

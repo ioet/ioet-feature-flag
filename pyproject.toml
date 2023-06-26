@@ -1,17 +1,21 @@
+[project]
+name = "ioet-feature-flag"
+authors = [{name = "ioet", email = "info@ioet.com"}]
+description = "Feature Flag library for ioet internal apps"
+readme = "README.md"
+urls = {Homepage = "https://github.com/ioet/ioet-feature-flag"}
+requires-python = ">=3.9"
+dependencies = []
+dynamic = ["version"]
+
 [tool.poetry]
-name = "ioet-featureflags"
+name = "ioet-feature-flag"
 version = "0.1.0"
-description = ""
+description = "Feature Flag library for ioet internal apps"
 authors = ["ioet <info@ioet.com>"]
 readme = "README.md"
-packages = [{include = "ioet_featureflags"}]
+packages = [{include = "ioet_featureflag"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.9"
 sample-helper-aws-appconfig = "^2.0.3"
-pytest = "^7.3.2"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
