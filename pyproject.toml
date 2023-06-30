@@ -19,6 +19,7 @@ packages = [{include = "ioet_featureflag"}]
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 sample-helper-aws-appconfig = "^2.0.3"
+black = "^23.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
