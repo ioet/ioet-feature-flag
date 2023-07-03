@@ -18,9 +18,9 @@ class JSONAdapter(FeatureRepositoryAdapter):
         except FileNotFoundError:
             return dict()
 
-    def set_flag(self, key: str, value: bool) -> Dict:
+    def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
         configuration_flags = self.get_flags()
-        updated_configuration = {**configuration_flags, key: value}
+        updated_configuration = {**configuration_flags, flag_name: is_flag_enabled}
         self._save_configuration_file(updated_configuration)
 
         return updated_configuration

@@ -11,8 +11,10 @@ class FeatureRouter:
     def _get_configuration(self) -> None:
         self.feature_flags = self.feature_repository.get_flags()
 
-    def set_feature_toggle(self, key: str, value: bool):
-        self.feature_flags = self.feature_repository.set_flag(key, value)
+    def set_feature_toggle(self, flag_name: str, is_flag_enabled: bool):
+        self.feature_flags = self.feature_repository.set_flag(
+            flag_name, is_flag_enabled
+        )
 
     def are_features_enabled(self, *flags) -> bool:
         feature_status = True

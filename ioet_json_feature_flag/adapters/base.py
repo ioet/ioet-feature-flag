@@ -8,5 +8,5 @@ class FeatureRepositoryAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_flag(self, key: str, value: bool) -> Dict:
+    def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
         raise NotImplementedError
