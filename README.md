@@ -38,32 +38,30 @@ It is also possible to install with HTTPS instead of SSH by simply replacing `ss
 ## Usage
 
 ```python
-import ioet_featureflag
+from ioet_json_feature_flag.feature_router import FeatureRouter
+from ioet_json_feature_flag.adapters.json_adapter import JSONAdapter
 
-feature_flags = ioet_featureflag.FeatureFlags(
-    provider=ioet_featureflag.providers.AWSAppConfigProvider(
-        appconfig_app="your_app",
-        appconfig_env="your_env",
-        appconfig_profile="your_profile",
+router = FeatureRouter(feature_repository=JSONAdapter("file.json"))
+router.set_feature_toggle("flag_name", is_flag_enabled=True)
+
+def path_when_enabled():
+    pass
+
+
+def path_when_disabled():
+    pass
+
+@router.toggle_point("flag_name")
+def client(toggle_point):
+    returned_value = togle_point.toggle(
+        path_when_enabled,
+        path_when_disabled
     )
-)
-
-@feature_flags.off("enable_new_feature")
-def old_feature():
-    pass
-
-@feature_flags.on("enable_new_feature")
-def new_feature():
-    pass
-
-def client():
-    old_feature()
-    new_feature()
 ```
 
-In this example, if the flag `enable_new_feature` is turned on, the `old_feature` function will _not_ get executed, and the `new_feature` function will be executed.
-
-If the flag is off, `old_feature` will be executed and `new_feature` will not.
+Once the feature router is declared, you can set flags (or get them from the 
+configuration file specified at `file.json`) and then decorate the caller 
+function of the desired functionality to get a `toggle_point` parameter, in which the behaviours can be passed. This `toggle_point` will execute the right path according to the flag and return its return value, if any.
 
 
 ## How to release version to Production
