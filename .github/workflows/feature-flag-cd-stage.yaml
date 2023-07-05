@@ -1,8 +1,9 @@
-name: Feature-Flag-Continues-Deployment
+name: Feature-Flag-Continues-Deployment-Stage
 
 on:
     push:
-        branches: [ main ]
+      tags:
+        - v[0-9]+.[0-9]+.[0-9]+-stg
 
 jobs:
     CD:

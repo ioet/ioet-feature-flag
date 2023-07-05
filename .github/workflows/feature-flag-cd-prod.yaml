@@ -1,11 +1,12 @@
-name: Feature-Flag-Continues-Integration
+name: Feature-Flag-Continues-Deployment-Prod
 
 on:
-    pull_request:
-        branches: [ main ]
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
-    CI:
+    CD:
         runs-on: ubuntu-latest
         strategy:
             matrix:

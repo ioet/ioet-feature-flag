@@ -23,3 +23,11 @@ sample-helper-aws-appconfig = "^2.0.3"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 pytest-mock = "^3.11.1"
+
+
+[tool.semantic_release]
+tag_format = "v{version}-stg"
+build_command="python release_version_tools/setup.py sdist bdist_wheel"
+branch = "main"
+version_variable = "release_version_tools/setup.py:__version__"
+upload_to_repository = false
