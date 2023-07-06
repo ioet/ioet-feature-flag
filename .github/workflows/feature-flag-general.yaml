@@ -63,10 +63,10 @@ jobs:
                 key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
 
             - name: Install dependencies
-              run: python -m poetry install
+              run: poetry install
 
             - name: Run test
-              run: python -m pytest -v
+              run: pytest -v
 
             - name: Python Semantic Release
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
