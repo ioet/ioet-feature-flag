@@ -71,7 +71,7 @@ jobs:
             - name: Python Semantic Release
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               run: |
-                pip install python-semantic-release
+                python3 -m pip install python-semantic-release
                 git config --global user.name "github-actions"
                 git config --global user.email "action@github.com"
                 DEBUG='semantic_release.*' semantic-release publish -D commit_author="github-actions <action@github.com>"
