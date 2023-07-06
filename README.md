@@ -66,6 +66,29 @@ In this example, if the flag `enable_new_feature` is turned on, the `old_feature
 If the flag is off, `old_feature` will be executed and `new_feature` will not.
 
 
+## How to release version to Production
+The release process is done locally. Before you start, please make sure you have permission to
+do it. Then, follow the steps:
+- Place yourself on the version you would like to release (let v0.0.1 be the version example):
+
+```
+git checkout v0.0.1-stg
+```
+
+- Then, tag it with a production version tag:
+
+```
+git tag v0.0.1
+```
+
+- Then, push the new release tag:
+
+```
+git push origin v0.0.1
+```
+
+- Production CI/CD will be triggered.
+
 ## Considerations
 - Please note that the current implementation is subject to change.
 - In order for AWS AppConfig to work, you must set env variables accordingly.
