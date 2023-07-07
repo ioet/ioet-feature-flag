@@ -14,7 +14,7 @@ version = "0.1.0"
 description = "Feature Flag library for ioet internal apps"
 authors = ["ioet <info@ioet.com>"]
 readme = "README.md"
-packages = [{include = "ioet_featureflag"}]
+packages = [{include = "ioet_json_feature_flag"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
