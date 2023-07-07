@@ -13,13 +13,13 @@ We are currently supporting Python version 3.9 as the minimum version required t
 We recommend installing this library with [Poetry](https://python-poetry.org/) (you can find more about installing dependencies with poetry [here](https://python-poetry.org/docs/cli/#add)).
 
 To install an specific version (recommended):
-```
-poetry add poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
+```shell
+poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
 ```
 
 To install the latest version:
 ```shell
-poetry add poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git
+poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git
 ```
 
 To install an specific version using `pip`:
@@ -53,7 +53,7 @@ def path_when_disabled():
 
 @router.toggle_point("flag_name")
 def client(toggle_point):
-    returned_value = togle_point.toggle(
+    returned_value = toggle_point.toggle(
         path_when_enabled,
         path_when_disabled
     )
