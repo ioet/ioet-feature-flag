@@ -1,11 +1,20 @@
 from typing import Callable
 
-from .adapters.base import FeatureRepositoryAdapter
+from .adapters.json_adapter import JSONAdapter
 
 
 class FeatureRouter:
-    def __init__(self, feature_repository: FeatureRepositoryAdapter) -> None:
-        self.feature_repository = feature_repository
+    __unique_instance = None
+
+    def __new__(cls):
+        if cls.__unique_instance is None:
+            cls.__unique_instance = super().__new__(cls)
+            cls.__unique_instance.feature_repository = JSONAdapter(
+                config_path="configurations.json"
+            )
+        return cls.__unique_instance
+
+    def __init__(self) -> None:
         self._get_configuration()
 
     def _get_configuration(self) -> None:

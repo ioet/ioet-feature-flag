@@ -38,10 +38,9 @@ It is also possible to install with HTTPS instead of SSH by simply replacing `ss
 ## Usage
 
 ```python
-from ioet_json_feature_flag.feature_router import FeatureRouter
-from ioet_json_feature_flag.adapters.json_adapter import JSONAdapter
+from ioet_json_feature_flag import FeatureRouter
 
-router = FeatureRouter(feature_repository=JSONAdapter("file.json"))
+router = FeatureRouter()
 router.set_feature_toggle("flag_name", is_flag_enabled=True)
 
 def path_when_enabled():
