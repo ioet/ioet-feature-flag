@@ -13,7 +13,11 @@ class TestFeatureRouter:
         }
         feature_repository_mock = mocker.Mock()
         feature_repository_mock.configure_mock(**feature_repository_attrs)
-        router = FeatureRouter(feature_repository_mock)
+        mocker.patch(
+            "ioet_json_feature_flag.feature_router.JSONAdapter",
+            return_value=feature_repository_mock,
+        )
+        router = FeatureRouter()
 
         router.set_feature_toggle("flag_2", False)
 
@@ -29,20 +33,17 @@ class TestFeatureRouter:
     )
     def test_are_features_enabled_returns_feature_status(
         self,
-        mocker,
+        monkeypatch,
         first_flag_state: bool,
         second_flag_state: bool,
         expected_state: bool,
     ):
-        feature_repository_attrs = {
-            "get_flags.return_value": {
-                "flag_1": first_flag_state,
-                "flag_2": second_flag_state,
-            },
+        feature_repository_flags = {
+            "flag_1": first_flag_state,
+            "flag_2": second_flag_state,
         }
-        feature_repository_mock = mocker.Mock()
-        feature_repository_mock.configure_mock(**feature_repository_attrs)
-        router = FeatureRouter(feature_repository_mock)
+        router = FeatureRouter()
+        monkeypatch.setattr(router, "feature_flags", feature_repository_flags)
 
         actual_state = router.are_features_enabled("flag_1", "flag_2")
 
