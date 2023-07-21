@@ -1,6 +1,6 @@
-import os
 from appconfig_helper import AppConfigHelper
 from ioet_featureflag.providers.base_provider import Provider
+
 
 class AWSAppConfigProvider(Provider):
     def __init__(

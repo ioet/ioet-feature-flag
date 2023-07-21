@@ -65,6 +65,10 @@ jobs:
             - name: Install dependencies
               run: poetry install
 
+            - name: Run linters
+              run: |
+                poetry run flake8 . --count --show-source --statistics
+
             - name: Run test
               run: poetry run pytest -v
 

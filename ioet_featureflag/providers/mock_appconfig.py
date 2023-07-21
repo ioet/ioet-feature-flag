@@ -1,6 +1,7 @@
 import typing
 from ioet_featureflag.providers.base_provider import Provider
 
+
 class MockAppconfig(Provider):
     def __init__(
         self,
