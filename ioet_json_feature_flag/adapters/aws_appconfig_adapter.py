@@ -20,6 +20,8 @@ class AWSAppConfigAdapter(FeatureRepositoryAdapter):
         return self._appconfig.config
 
     def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
+        # TODO: This won't actually change the status of the feature flag,
+        # as data is not being sent back to AWS.
         if not self._appconfig.config.get(flag_name):
             self._appconfig.config[flag_name] = {}
         self._appconfig.config[flag_name]['enabled'] = is_flag_enabled
