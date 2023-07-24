@@ -14,17 +14,17 @@ version = "0.1.0"
 description = "Feature Flag library for ioet internal apps"
 authors = ["ioet <info@ioet.com>"]
 readme = "README.md"
-packages = [{include = "ioet_json_feature_flag"}]
+packages = [{include = "ioet_feature_flag"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 sample-helper-aws-appconfig = "^2.0.3"
-black = "^23.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 pytest-mock = "^3.11.1"
 flake8 = "^6.0.0"
+black = "^23.3.0"
 
 
 [tool.semantic_release]

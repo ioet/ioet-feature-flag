@@ -1,7 +1,7 @@
 from unittest.mock import mock_open
 import json
 
-from ioet_json_feature_flag.adapters.json_adapter import JSONAdapter
+from ioet_feature_flag.adapters.json_adapter import JSONAdapter
 
 
 class TestJsonAdapter:
@@ -12,7 +12,7 @@ class TestJsonAdapter:
         expected_flags = {"flag_1": True, "flag_2": False}
         json_load_mock = mocker.Mock(return_value=expected_flags)
         mocker.patch(
-            "ioet_json_feature_flag.adapters.json_adapter.open", new_callable=mock_open
+            "ioet_feature_flag.adapters.json_adapter.open", new_callable=mock_open
         )
         monkeypatch.setattr(json, "load", json_load_mock)
 
@@ -23,7 +23,7 @@ class TestJsonAdapter:
     def test_get_flags_when_there_is_no_file_returns_empty_dictionary(self, mocker):
         path = "configuration.json"
         mocker.patch(
-            "ioet_json_feature_flag.adapters.json_adapter.open",
+            "ioet_feature_flag.adapters.json_adapter.open",
             side_effect=FileNotFoundError,
         )
 
@@ -40,7 +40,7 @@ class TestJsonAdapter:
         json_load_mock = mocker.Mock(return_value=outdated_flags)
         json_dump_mock = mocker.Mock()
         mocker.patch(
-            "ioet_json_feature_flag.adapters.json_adapter.open", new_callable=mock_open
+            "ioet_feature_flag.adapters.json_adapter.open", new_callable=mock_open
         )
         monkeypatch.setattr(json, "load", json_load_mock)
         monkeypatch.setattr(json, "dump", json_dump_mock)

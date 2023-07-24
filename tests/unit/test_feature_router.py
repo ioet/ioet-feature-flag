@@ -1,7 +1,7 @@
 import pytest
 
-from ioet_json_feature_flag.feature_router import FeatureRouter
-from ioet_json_feature_flag.feature_router import TogglePoint
+from ioet_feature_flag.feature_router import FeatureRouter
+from ioet_feature_flag.feature_router import TogglePoint
 
 
 class TestFeatureRouter:
@@ -14,7 +14,7 @@ class TestFeatureRouter:
         feature_repository_mock = mocker.Mock()
         feature_repository_mock.configure_mock(**feature_repository_attrs)
         mocker.patch(
-            "ioet_json_feature_flag.feature_router.JSONAdapter",
+            "ioet_feature_flag.feature_router.JSONAdapter",
             return_value=feature_repository_mock,
         )
         router = FeatureRouter()
