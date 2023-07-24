@@ -30,6 +30,7 @@ exclude =
     ./release_version_tools
     ./build
     ./setup.egg-info
+    ./dist
 show-source = True
 statistics = True
 max-line-length=100
