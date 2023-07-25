@@ -2,6 +2,7 @@ import typing
 
 from .providers import Provider
 
+
 class FeatureFlags:
     def __init__(
         self,

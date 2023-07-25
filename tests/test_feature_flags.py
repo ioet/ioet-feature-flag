@@ -5,6 +5,7 @@ from unittest import mock
 from ioet_featureflag import FeatureFlags
 from ioet_featureflag.providers import MockAppconfig
 
+
 @pytest.mark.parametrize(
     "mock_config, feature_name, expected_result",
     [
@@ -77,7 +78,6 @@ def test_on_off(feature_enabled):
     def wrapper():
         _old_feature()
         _new_feature()
-    
     wrapper()
 
     if feature_enabled:
