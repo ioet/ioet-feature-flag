@@ -140,6 +140,24 @@ class AppConfigHelper:
         if self._next_config_token is None:
             self.start_session()
 
+        response = self._get_latest_configuration()
+
+        self._next_config_token = response["NextPollConfigurationToken"]
+        self._poll_interval = int(response["NextPollIntervalInSeconds"])
+
+        content = response["Configuration"].read()  # type: bytes
+        if content == b"":
+            self._last_update_time = time.time()
+            return False
+
+        self._config = self._parse_config(content, response["ContentType"])
+
+        self._last_update_time = time.time()
+        self._raw_config = content
+        self._content_type = response["ContentType"]
+        return True
+
+    def _get_latest_configuration(self) -> dict:
         try:
             response = self._client.get_latest_configuration(
                 ConfigurationToken=self._next_config_token
@@ -150,41 +168,41 @@ class AppConfigHelper:
                 ConfigurationToken=self._next_config_token
             )
 
-        self._next_config_token = response["NextPollConfigurationToken"]
-        self._poll_interval = int(response["NextPollIntervalInSeconds"])
+        return response
 
-        content = response["Configuration"].read()  # type: bytes
-        if content == b"":
-            self._last_update_time = time.time()
-            return False
+    def _parse_config(self, content, content_type: str) -> dict:
+        parsers = {
+            "application/x-yaml": self._parse_yaml_config,
+            "application/json": self._parse_json_config,
+            "text/plain": self._parse_text_config,
+        }
+        parser = parsers.get(content_type)
+        if parser:
+            return parser(content)
+        return content
 
-        if response["ContentType"] == "application/x-yaml":
-            if not yaml_available:
-                raise RuntimeError(
-                    "Configuration in YAML format received and missing "
-                    "yaml library; pip install pyyaml?"
+    def _parse_yaml_config(cls, content: bytes) -> dict:
+        if not yaml_available:
+            raise RuntimeError(
+                "Configuration in YAML format received and missing "
+                "yaml library; pip install pyyaml?"
+            )
+        try:
+            return yaml.safe_load(content)
+        except yaml.YAMLError as error:
+            message = "Unable to parse YAML configuration data"
+            if hasattr(error, "problem_mark"):
+                message = (
+                    f"{message} at line {error.problem_mark.line + 1} "
+                    f"column {error.problem_mark.column + 1}"
                 )
-            try:
-                self._config = yaml.safe_load(content)
-            except yaml.YAMLError as error:
-                message = "Unable to parse YAML configuration data"
-                if hasattr(error, "problem_mark"):
-                    message = (
-                        f"{message} at line {error.problem_mark.line + 1} "
-                        f"column {error.problem_mark.column + 1}"
-                    )
-                raise ValueError(message) from error
-        elif response["ContentType"] == "application/json":
-            try:
-                self._config = json.loads(content.decode("utf-8"))
-            except json.JSONDecodeError as error:
-                raise ValueError(error.msg) from error
-        elif response["ContentType"] == "text/plain":
-            self._config = content.decode("utf-8")
-        else:
-            self._config = content
+            raise ValueError(message) from error
 
-        self._last_update_time = time.time()
-        self._raw_config = content
-        self._content_type = response["ContentType"]
-        return True
+    def _parse_json_config(cls, content: bytes) -> dict:
+        try:
+            return json.loads(content.decode("utf-8"))
+        except json.JSONDecodeError as error:
+            raise ValueError(error.msg) from error
+
+    def _parse_text_config(cls, content: bytes) -> dict:
+        return content.decode("utf-8")
