@@ -35,6 +35,19 @@ pip install git+ssh://git@github.com/ioet/ioet-feature-flag.git
 It is also possible to install with HTTPS instead of SSH by simply replacing `ssh://git@github.com` by `https://github.com`, although we recommend using SSH instead.
 
 
+## Requirements
+In order to be able to use the AWS AppConfig provider, the following environment variables must be set:
+```
+AWS_APPCONFIG_APP=your-appconfig-app-name
+AWS_APPCONFIG_ENV=your-appconfig-environment
+AWS_APPCONFIG_PROFILE=your-appconfig-profile
+AWS_DEFAULT_REGION=us-east-2
+AWS_ACCESS_KEY_ID="your-access-key-id"
+AWS_SECRET_ACCESS_KEY="your-access-key"
+AWS_SESSION_TOKEN="your-session-token"
+```
+
+
 ## Usage
 
 ```python
@@ -65,4 +78,3 @@ function of the desired functionality to get a `toggle_point` parameter, in whic
 
 ## Considerations
 - Please note that the current implementation is subject to change.
-- In order for AWS AppConfig to work, you must set env variables accordingly.
