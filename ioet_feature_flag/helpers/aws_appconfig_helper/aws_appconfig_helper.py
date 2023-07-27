@@ -1,3 +1,9 @@
+"""
+Source: https://github.com/aws-samples/sample-python-helper-aws-appconfig/
+
+Changes were made to this file to adjust it to our necesities.
+"""
+
 import json
 import time
 from typing import Any, Dict, Optional, Union
