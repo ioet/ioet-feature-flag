@@ -1,4 +1,3 @@
-import pytest
 import appconfig_helper
 from unittest import mock
 
