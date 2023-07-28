@@ -1,6 +1,6 @@
 from typing import Callable
 
-from .adapters.json_adapter import JSONAdapter
+from .adapters.aws_appconfig_adapter import AWSAppConfigAdapter
 
 
 class FeatureRouter:
@@ -9,9 +9,7 @@ class FeatureRouter:
     def __new__(cls):
         if cls.__unique_instance is None:
             cls.__unique_instance = super().__new__(cls)
-            cls.__unique_instance.feature_repository = JSONAdapter(
-                config_path="configurations.json"
-            )
+            cls.__unique_instance.feature_repository = AWSAppConfigAdapter()
         return cls.__unique_instance
 
     def __init__(self) -> None:
