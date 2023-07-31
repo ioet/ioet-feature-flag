@@ -13,10 +13,13 @@ name = "ioet-feature-flag"
 version = "0.1.0"
 description = "Feature Flag library for ioet internal apps"
 authors = ["ioet <info@ioet.com>"]
-readme = "README.md"
-include = [
-    {path = "ioet_feature_flag"}
+packages = [
+    { include = "ioet_feature_flag" },
 ]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"

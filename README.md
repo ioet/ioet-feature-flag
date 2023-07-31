@@ -83,31 +83,81 @@ AWS_SESSION_TOKEN="your-session-token"
 
 ## Usage
 
+Example made by @eguezgustavo
+
 ```python
-from ioet_feature_flag import FeatureRouter
+import ioet_feature_flag
 
-router = FeatureRouter()
-
-def path_when_enabled():
-    pass
+provider = ioet_feature_flag.JsonToggleProvider("/tmp/test_app_toggles.json")
+toggles = ioet_feature_flag.Toggles(provider=provider)
 
 
-def path_when_disabled():
-    pass
+@toggles.toggle_decision
+def usage_of_order_cancellation_email(get_toggles, when_on, when_off):
+    order_cancellation_enabled, auto_refund_enabled = get_toggles(
+        ["isOrderCancellationEnabled", "isAutoRefundEnable"]
+    )
+    if order_cancellation_enabled and auto_refund_enabled:
+        return when_on
+    return when_off
 
-@router.toggle_point("flag_name")
-def client(toggle_point):
-    returned_value = toggle_point.toggle(
-        path_when_enabled,
-        path_when_disabled
+
+def create_email_body(client_name: str, sales_order_number: str) -> str:
+    header = f"""
+    Dear {client_name},
+
+    Your order number {sales_order_number} has bee approved.
+    """
+
+    footer = """
+    Cheers,
+
+    Your company team
+    """
+
+    cancellation_text = usage_of_order_cancellation_email(
+        when_on=f"To cancel your order follow this link: http://cancel/{sales_order_number}",
+        when_off="",
     )
 
-client()
+    return f"""
+    {header}
+    {cancellation_text}
+    {footer}
+    """
+
+body = create_email_body("Gustavo", "2342937")
+print(body)
 ```
 
-Once the feature router is declared, you can decorate the caller 
-function of the desired functionality to get a `toggle_point` parameter, in which the behaviours can be passed. This `toggle_point` will execute the right path according to the flag and return its return value, if any.
+You can also toggle between function calls, like this:
+```python
+def gen_one_pokedex():
+  # Let's imagine that this is actually an API call and
+  # we want to either prevent or allow its usage
+  return ["Bulbasaur", "Squirtle", "Charmander"]
 
+def gen_two_pokedex():
+  # Same here
+  return ["Chikorita", "Totodile", "Cyndaquil"]
+
+
+@toggles.toggle_decision
+def decide_pokedex_usage(get_toggles, when_on, when_off):
+    use_gen_two_pokedex = get_toggles(["useGenTwoPokedex"])
+    if use_gen_two_pokedex:
+        return when_on
+    return when_off
+
+
+def client()
+  get_pokedex_list = decide_pokedex_usage(
+    when_on=gen_two_pokedex,
+    when_off=gen_one_pokedex,
+  )
+
+  pokemons = get_pokedex_list()
+```
 
 ## How to release version to Production
 The release process is done locally. Before you start, please make sure you have permission to
