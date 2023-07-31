@@ -1,6 +1,6 @@
 from typing import Callable
 
-from .adapters.aws_appconfig_adapter import AWSAppConfigAdapter
+from .factories.adapters import get_toggle_configuration
 
 
 class FeatureRouter:
@@ -9,7 +9,7 @@ class FeatureRouter:
     def __new__(cls):
         if cls.__unique_instance is None:
             cls.__unique_instance = super().__new__(cls)
-            cls.__unique_instance.feature_repository = AWSAppConfigAdapter()
+            cls.__unique_instance.feature_repository = get_toggle_configuration()
         return cls.__unique_instance
 
     def __init__(self) -> None:
