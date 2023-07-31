@@ -14,7 +14,7 @@ class TestFeatureRouter:
         feature_repository_mock = mocker.Mock()
         feature_repository_mock.configure_mock(**feature_repository_attrs)
         mocker.patch(
-            "ioet_feature_flag.feature_router.AWSAppConfigAdapter",
+            "ioet_feature_flag.feature_router.get_toggle_configuration",
             return_value=feature_repository_mock,
         )
         router = FeatureRouter()
