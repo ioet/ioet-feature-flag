@@ -5,15 +5,16 @@ from ioet_feature_flag.adapters.aws_appconfig_adapter import AWSAppConfigAdapter
 
 
 class TestAWSAppconfigAdapter:
-    @mock.patch("ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper", autospec=True)
-    def test_get_flags(
-        self, appconfig_cls, monkeypatch
-    ):
-        monkeypatch.setenv('AWS_REGION', 'test-region')
-        monkeypatch.setenv('AWS_DEFAULT_REGION', 'test-region')
-        monkeypatch.setenv('AWS_APPCONFIG_APP', 'test-app')
-        monkeypatch.setenv('AWS_APPCONFIG_ENV', 'test-env')
-        monkeypatch.setenv('AWS_APPCONFIG_PROFILE', 'test-profile')
+    @mock.patch(
+        "ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper",
+        autospec=True,
+    )
+    def test_get_flags(self, appconfig_cls, monkeypatch):
+        monkeypatch.setenv("AWS_REGION", "test-region")
+        monkeypatch.setenv("AWS_DEFAULT_REGION", "test-region")
+        monkeypatch.setenv("AWS_APPCONFIG_APP", "test-app")
+        monkeypatch.setenv("AWS_APPCONFIG_ENV", "test-env")
+        monkeypatch.setenv("AWS_APPCONFIG_PROFILE", "test-profile")
         expected_flags = {
             "flag_1": {
                 "enabled": True,
@@ -31,17 +32,18 @@ class TestAWSAppconfigAdapter:
 
         assert expected_flags == actual_flags
 
-    @mock.patch("ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper", autospec=True)
-    def test_set_flag(
-        self, appconfig_cls, monkeypatch
-    ):
-        monkeypatch.setenv('AWS_REGION', 'test-region')
-        monkeypatch.setenv('AWS_DEFAULT_REGION', 'test-region')
-        monkeypatch.setenv('AWS_APPCONFIG_APP', 'test-app')
-        monkeypatch.setenv('AWS_APPCONFIG_ENV', 'test-env')
-        monkeypatch.setenv('AWS_APPCONFIG_PROFILE', 'test-profile')
+    @mock.patch(
+        "ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper",
+        autospec=True,
+    )
+    def test_set_flag(self, appconfig_cls, monkeypatch):
+        monkeypatch.setenv("AWS_REGION", "test-region")
+        monkeypatch.setenv("AWS_DEFAULT_REGION", "test-region")
+        monkeypatch.setenv("AWS_APPCONFIG_APP", "test-app")
+        monkeypatch.setenv("AWS_APPCONFIG_ENV", "test-env")
+        monkeypatch.setenv("AWS_APPCONFIG_PROFILE", "test-profile")
         outdated_flags = {
-            "flag_1":{
+            "flag_1": {
                 "enabled": True,
             },
             "flag_2": {

@@ -24,5 +24,5 @@ class AWSAppConfigAdapter(FeatureRepositoryAdapter):
         # as data is not being sent back to AWS.
         if not self._appconfig.config.get(flag_name):
             self._appconfig.config[flag_name] = {}
-        self._appconfig.config[flag_name]['enabled'] = is_flag_enabled
+        self._appconfig.config[flag_name]["enabled"] = is_flag_enabled
         return self._appconfig.config
