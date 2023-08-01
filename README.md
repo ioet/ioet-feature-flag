@@ -88,7 +88,7 @@ Example made by @eguezgustavo
 ```python
 import ioet_feature_flag
 
-provider = ioet_feature_flag.JsonToggleProvider("/tmp/test_app_toggles.json")
+provider = ioet_feature_flag.AWSAppConfigToggleProvider()
 toggles = ioet_feature_flag.Toggles(provider=provider)
 
 
