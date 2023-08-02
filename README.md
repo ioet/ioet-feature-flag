@@ -117,7 +117,7 @@ class InvoiceEmailer:
         )
         return base_mail + cancelation_link
 ```
-(Another example without ussing classes looks like this)
+(Another example without using classes looks like this)
 ```python
 from ioet_feature_flag import TogglePoint
 
