@@ -82,32 +82,58 @@ AWS_SESSION_TOKEN="your-session-token"
 
 
 ## Usage
+The example below uses a sample feature to include a cancellation link in a email so the user can cancel the sales order.
 
+1. Create the `feature_toggles.json` file with the following content:
+```json
+{
+    "isOrderCancellationEnabled": true,
+    "isAutoRefundEnable": false
+}
+```
+2. Register a router class as a `FeatureRouter`. With this, `_get_toggles` method will be present to query any flag. Override the `__call__` method with your desired routing logic, like this:
 ```python
 from ioet_feature_flag import FeatureRouter
 
-router = FeatureRouter()
 
-def path_when_enabled():
-    pass
-
-
-def path_when_disabled():
-    pass
-
-@router.toggle_point("flag_name")
-def client(toggle_point):
-    returned_value = toggle_point.toggle(
-        path_when_enabled,
-        path_when_disabled
-    )
-
-client()
+class IncludeOrderCancelationLink(FeatureRouter):
+    def __call__(self) -> bool:
+        order_cancellation_enabled, auto_refund_enabled = self._get_toggles(
+            ["isOrderCancellationEnabled", "isAutoRefundEnable"]
+        )
+        return order_cancellation_enabled and auto_refund_enabled
 ```
 
-Once the feature router is declared, you can decorate the caller 
-function of the desired functionality to get a `toggle_point` parameter, in which the behaviours can be passed. This `toggle_point` will execute the right path according to the flag and return its return value, if any.
+3. Mark a function as a toggle point. This function must have three arguments `toggle_point`, `when_on` and `when_off`. Use the `toggle_point` argument to toggle your paths of execution:
+```python
+from ioet_feature_flag import TogglePoint
 
+@TogglePoint(toggle_router=IncludeOrderCancelationLink)
+def _usage_of_order_cancellation_email(toggle_point, when_on, when_off):
+    return toggle_point.toggle(
+        when_on=when_on,
+        when_off=when_off
+    )
+
+class InvoiceEmailer:
+    def generate_invoice_email(self) -> str:
+        base_mail = "Your order has been approved. "
+        cancelation_link = _usage_of_order_cancellation_email(
+            when_on="Link for cancelation is <here>",
+            when_off=""
+        )
+        return base_mail + cancelation_link
+    
+```
+4. Call your feature and check the response based on `feature_toggles.json` flags (try changing its values to make the function show the cancelation link):
+```python
+def main():
+    email = InvoiceEmailer().generate_invoice_email()
+    print(email) #Will show: Your order has been approved.
+
+
+main()
+```
 
 ## Considerations
 - Please note that the current implementation is subject to change.
