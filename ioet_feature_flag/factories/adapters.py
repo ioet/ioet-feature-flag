@@ -1,5 +1,5 @@
-from ..adapters.base import FeatureRepositoryAdapter
-from ..adapters.json_adapter import JSONAdapter
+from ..toggle_configuration.base import FeatureRepositoryAdapter
+from ..toggle_configuration.json_adapter import JSONAdapter
 
 
 def get_toggle_configuration() -> FeatureRepositoryAdapter:

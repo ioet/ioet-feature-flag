@@ -1,12 +1,14 @@
 import appconfig_helper
 from unittest import mock
 
-from ioet_feature_flag.adapters.aws_appconfig_adapter import AWSAppConfigAdapter
+from ioet_feature_flag.toggle_configuration.aws_appconfig_adapter import (
+    AWSAppConfigAdapter,
+)
 
 
 class TestAWSAppconfigAdapter:
     @mock.patch(
-        "ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper",
+        "ioet_feature_flag.toggle_configuration.aws_appconfig_adapter.AppConfigHelper",
         autospec=True,
     )
     def test_get_flags(self, appconfig_cls, monkeypatch):
@@ -33,7 +35,7 @@ class TestAWSAppconfigAdapter:
         assert expected_flags == actual_flags
 
     @mock.patch(
-        "ioet_feature_flag.adapters.aws_appconfig_adapter.AppConfigHelper",
+        "ioet_feature_flag.toggle_configuration.aws_appconfig_adapter.AppConfigHelper",
         autospec=True,
     )
     def test_set_flag(self, appconfig_cls, monkeypatch):
