@@ -3,8 +3,7 @@ import typing
 import pytest
 import json
 
-from ioet_feature_flag.toggle_configuration.base import ToggleConfiguration
-from ioet_feature_flag.toggle_configuration.json_adapter import JSONAdapter
+from ioet_feature_flag.toggle_configuration import ToggleConfiguration, JSONAdapter
 from ioet_feature_flag._exceptions import ToggleNotFoundError
 
 
