@@ -1,12 +1,13 @@
 import os
 from appconfig_helper import AppConfigHelper
-from typing import Dict
+from typing import List, Tuple, Dict
 
 
-from .base import FeatureRepositoryAdapter
+from .base import ToggleConfiguration
+from .._exceptions import ToggleNotFoundError
 
 
-class AWSAppConfigAdapter(FeatureRepositoryAdapter):
+class AWSAppConfigAdapter(ToggleConfiguration):
     def __init__(self) -> None:
         self._appconfig = AppConfigHelper(
             os.environ["AWS_APPCONFIG_APP"],
@@ -15,14 +16,18 @@ class AWSAppConfigAdapter(FeatureRepositoryAdapter):
             os.environ.get("AWS_APPCONFIG_MAX_CONFIG_AGE", 45),
         )
 
-    def get_flags(self) -> Dict:
+    def get_toggles(self, toggle_names: List[str]) -> Tuple[bool, ...]:
         self._appconfig.update_config()
-        return self._appconfig.config
+        toggles: Dict = self._appconfig.config
 
-    def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
-        # TODO: This won't actually change the status of the feature flag,
-        # as data is not being sent back to AWS.
-        if not self._appconfig.config.get(flag_name):
-            self._appconfig.config[flag_name] = {}
-        self._appconfig.config[flag_name]["enabled"] = is_flag_enabled
-        return self._appconfig.config
+        missing_toogles = [toggle for toggle in toggle_names if toggle not in toggles]
+        if missing_toogles:
+            raise ToggleNotFoundError(
+                f"The follwing toggles where not found: {', '.join(missing_toogles)}"
+            )
+
+        return tuple(
+            bool(toggle_value.get("enabled"))
+            for toggle_name, toggle_value in toggles.items()
+            if toggle_name in toggle_names
+        )

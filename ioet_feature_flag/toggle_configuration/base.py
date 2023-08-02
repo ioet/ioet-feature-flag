@@ -1,12 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Tuple, List
 
 
-class FeatureRepositoryAdapter(ABC):
+class ToggleConfiguration(ABC):
     @abstractmethod
-    def get_flags(self) -> Dict:
-        raise NotImplementedError
-
-    @abstractmethod
-    def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
+    def get_toggles(self, toggle_names: List[str]) -> Tuple[bool, ...]:
         raise NotImplementedError

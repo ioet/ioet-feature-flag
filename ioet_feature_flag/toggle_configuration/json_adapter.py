@@ -1,30 +1,30 @@
 import os
 import json
-from typing import Dict
+from typing import List, Tuple
 
 
-from .base import FeatureRepositoryAdapter
+from .base import ToggleConfiguration
+from .._exceptions import ToggleNotFoundError
 
 
-class JSONAdapter(FeatureRepositoryAdapter):
-    def __init__(self, config_path: str) -> None:
-        self.config_path = os.path.normpath(config_path)
+class JSONAdapter(ToggleConfiguration):
+    def __init__(self, toggles_file_path: str) -> None:
+        self.path = toggles_file_path
 
-    def get_flags(self) -> Dict:
-        try:
-            with open(self.config_path, "r") as configuration_file:
-                configuration_flags = json.load(configuration_file)
-                return configuration_flags
-        except FileNotFoundError:
-            return dict()
+    def get_toggles(self, toggle_names: List[str]) -> Tuple[bool, ...]:
+        with open(self.path, "r") as toggles_file:
+            toggles = json.load(toggles_file)
 
-    def set_flag(self, flag_name: str, is_flag_enabled: bool) -> Dict:
-        configuration_flags = self.get_flags()
-        updated_configuration = {**configuration_flags, flag_name: is_flag_enabled}
-        self._save_configuration_file(updated_configuration)
+            missing_toogles = [
+                toggle for toggle in toggle_names if toggle not in toggles
+            ]
+            if missing_toogles:
+                raise ToggleNotFoundError(
+                    f"The follwing toggles where not found: {', '.join(missing_toogles)}"
+                )
 
-        return updated_configuration
-
-    def _save_configuration_file(self, base_configuration: Dict):
-        with open(self.config_path, "w") as configuration_file:
-            json.dump(base_configuration, configuration_file, indent=2)
+            return tuple(
+                bool(toggle_value)
+                for toggle_name, toggle_value in toggles.items()
+                if toggle_name in toggle_names
+            )

@@ -1,6 +1,6 @@
 from typing import Callable
 
-from .factories.adapters import get_toggle_configuration
+from .factories.toggle_configuration import get_toggle_configuration
 
 
 class FeatureRouter:

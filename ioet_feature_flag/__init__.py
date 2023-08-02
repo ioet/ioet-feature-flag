@@ -1,2 +1,2 @@
 from .feature_router import FeatureRouter, TogglePoint
-from .factories.adapters import get_toggle_configuration
+from .factories.toggle_configuration import get_toggle_configuration
