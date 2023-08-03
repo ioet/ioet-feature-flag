@@ -13,9 +13,8 @@ name = "ioet-feature-flag"
 version = "0.1.0"
 description = "Feature Flag library for ioet internal apps"
 authors = ["ioet <info@ioet.com>"]
-packages = [
-    { include = "ioet_feature_flag" },
-]
+readme = "README.md"
+packages = [{include = "ioet_featureflag"}]
 
 [build-system]
 requires = ["poetry-core"]
