@@ -72,6 +72,9 @@ jobs:
             - name: Run test
               run: poetry run pytest -v
 
+            - name: Test library import
+              run: ./scripts/test_import/test-import.sh
+
             - name: Python Semantic Release
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               run: |
