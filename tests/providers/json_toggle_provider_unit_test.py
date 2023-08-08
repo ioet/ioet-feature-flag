@@ -79,7 +79,7 @@ class TestGetTogglesMethod:
         add_toggles(toggles)
 
         with pytest.raises(ToggleEnvironmentError) as error:
-            toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
+            JsonToggleProvider(_TOGGLES_FILE)
 
         assert (
             str(error.value)
