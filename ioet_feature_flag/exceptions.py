@@ -8,3 +8,9 @@ class InvalidDecisionFunction(Exception):
     """
     Exception raised when a invalid decision function is detected
     """
+
+
+class ToggleEnvironmentError(Exception):
+    """
+    Exception raised when the toggle environmnet is not specified
+    """
