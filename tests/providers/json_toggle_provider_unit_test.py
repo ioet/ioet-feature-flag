@@ -41,7 +41,12 @@ class TestGetTogglesMethod:
         add_toggles: typing.Callable[[typing.Dict[str, typing.Dict[str, bool]]], None],
     ):
         monkeypatch.setenv("ENVIRONMENT", environment_name)
-        toggles = {environment_name: {"some_toggle": True, "another_toggle": False}}
+        toggles = {
+            environment_name: {
+                "some_toggle": {"enabled": True},
+                "another_toggle": {"enabled": False}
+            }
+        }
         add_toggles(toggles)
 
         toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
@@ -49,8 +54,8 @@ class TestGetTogglesMethod:
             ["some_toggle", "another_toggle"]
         )
 
-        assert some_toggle == toggles[environment_name]["some_toggle"]
-        assert another_toggle == toggles[environment_name]["another_toggle"]
+        assert some_toggle == toggles[environment_name]["some_toggle"]["enabled"]
+        assert another_toggle == toggles[environment_name]["another_toggle"]["enabled"]
 
     @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
     def test__raises_an_error__if_one_of_the_toggles_does_not_exist(
@@ -60,7 +65,11 @@ class TestGetTogglesMethod:
         monkeypatch,
     ):
         monkeypatch.setenv("ENVIRONMENT", environment_name)
-        toggles = {environment_name: {"some_toggle": True}}
+        toggles = {
+            environment_name: {
+                "some_toggle": {"enabled": True}
+            }
+        }
         add_toggles(toggles)
         toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
 
@@ -75,7 +84,11 @@ class TestGetTogglesMethod:
         self,
         add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
     ):
-        toggles = {"undefined_env": {"some_toggle": True}}
+        toggles = {
+            "undefined_env": {
+                "some_toggle": {"enabled": True}
+            }
+        }
         add_toggles(toggles)
 
         with pytest.raises(ToggleEnvironmentError) as error:

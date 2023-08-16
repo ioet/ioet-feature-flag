@@ -1,5 +1,5 @@
 {
     "test": {
-        "dummy-flag":  true
+        "dummy-flag":  {"enabled": true}
     }
 }
