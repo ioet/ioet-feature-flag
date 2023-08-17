@@ -29,7 +29,7 @@ class JsonToggleProvider(Provider):
                 )
 
             return tuple(
-                bool(toggle_value)
+                bool(toggle_value.get("enabled"))
                 for toggle_name, toggle_value in environment_toggles.items()
                 if toggle_name in toggle_names
             )
