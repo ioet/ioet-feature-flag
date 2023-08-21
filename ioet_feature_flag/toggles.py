@@ -1,12 +1,20 @@
+import typing
+
 from functools import wraps
 
 from . import exceptions, types
-from .providers import Provider
+from .providers import Provider, JsonToggleProvider
 
 
 class Toggles:
-    def __init__(self, provider: Provider) -> None:
-        self.provider = provider
+    def __init__(
+        self,
+        provider: typing.Optional[Provider] = None,
+    ) -> None:
+        if provider:
+            self.provider = provider
+            return
+        self.provider = JsonToggleProvider('./toggles/toggles.json')
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
         @wraps(decision_function)

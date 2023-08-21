@@ -14,3 +14,23 @@ class ToggleEnvironmentError(Exception):
     """
     Exception raised when the toggle environmnet is not specified
     """
+
+
+class InvalidToggleType(Exception):
+    """
+    Exception raised when the toggle type is not valid
+    """
+
+
+class MissingToggleAttributes(Exception):
+    """
+    Exception raised when a specific toggle type is missing attributes.
+    For example, when the toggle type "cutover" is missing the "date" attribute.
+    """
+
+
+class InvalidToggleAttribute(Exception):
+    """
+    Exception raised when a specific toggle attribute not valid.
+    For example, when the toggle attribute "date" is not a valid date.
+    """

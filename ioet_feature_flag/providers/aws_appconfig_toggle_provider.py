@@ -3,6 +3,7 @@ import typing
 from ..helpers import AppConfigHelper
 from ..exceptions import ToggleNotFoundError
 from .provider import Provider
+from ..strategies import get_toggle_strategy
 
 
 class AWSAppConfigToggleProvider(Provider):
@@ -27,7 +28,7 @@ class AWSAppConfigToggleProvider(Provider):
             )
 
         return tuple(
-            bool(toggle_value.get("enabled"))
+            get_toggle_strategy(toggle_value).is_enabled()
             for toggle_name, toggle_value in toggles.items()
             if toggle_name in toggle_names
         )
