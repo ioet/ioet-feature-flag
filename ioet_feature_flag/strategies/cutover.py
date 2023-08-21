@@ -2,7 +2,7 @@ import datetime
 import typing
 
 from .strategy import Strategy
-from ..exceptions import InvalidToggleType, InvalidToggleAttribute, MissingToggleAttributes
+from ..exceptions import InvalidToggleAttribute, MissingToggleAttributes
 
 
 class Cutover(Strategy):

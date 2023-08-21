@@ -1,5 +1,3 @@
-import typing
-
 from functools import wraps
 
 from . import exceptions, types
