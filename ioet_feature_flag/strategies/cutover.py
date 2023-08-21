@@ -1,28 +1,32 @@
+import datetime
 import typing
 
 from .strategy import Strategy
-from ..exceptions import InvalidToggleType
+from ..exceptions import InvalidToggleType, InvalidToggleAttribute, MissingToggleAttributes
 
 
 class Cutover(Strategy):
-    def __init__(self, enabled: bool, date: str) -> None:
+    def __init__(self, enabled: bool, date: datetime.datetime) -> None:
         self._enabled = enabled
         self._date = date
 
     def is_enabled(self) -> bool:
-        current_date = "?"
+        current_date = datetime.datetime.utcnow()
         if self._enabled and current_date >= self._date:
             return True
         return False
 
 
 def build_cutover_type(metadata: typing.Dict) -> Cutover:
-    if not metadata.get('date'):
-        raise InvalidToggleType("The toggle type 'cutover' requires a 'date' attribute")
-    
-    # TODO: check for a valid date here
+    if not metadata.get("date"):
+        raise MissingToggleAttributes("The toggle type 'cutover' requires a 'date' attribute")
+
+    try:
+        date = datetime.datetime.strptime(metadata.get("date"), "%Y-%m-%d %H:%M")
+    except ValueError as e:
+        raise InvalidToggleAttribute(f"The provided date for the toggle is not valid: {str(e)}.")
 
     return Cutover(
         enabled=metadata.get('enabled', False),
-        date=metadata['date'],
+        date=date,
     )

@@ -11,7 +11,7 @@ from ioet_feature_flag.exceptions import InvalidToggleType
     "metadata, expected_result, expected_exception",
     [
         ({"type": "static"}, Static, None),
-        ({"type": "cutover", "date": "2023-08-22"}, Cutover, None),
+        ({"type": "cutover", "date": "2023-08-21 08:00"}, Cutover, None),
         ({"type": "non_existent_type"}, None, InvalidToggleType),
     ]
 )
