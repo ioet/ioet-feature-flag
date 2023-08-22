@@ -1,7 +1,7 @@
 import pytest
 from freezegun import freeze_time
 
-from ioet_feature_flag.strategies.cutover import build_cutover_type
+from ioet_feature_flag.strategies import Cutover
 from ioet_feature_flag.exceptions import InvalidToggleAttribute, MissingToggleAttributes
 
 
@@ -34,7 +34,7 @@ class TestCutoverStrategy:
         }
         if expected_exception:
             with pytest.raises(expected_exception):
-                build_cutover_type(metadata)
+                Cutover.from_metadata(metadata)
         else:
-            cutover_strategy = build_cutover_type(metadata)
+            cutover_strategy = Cutover.from_metadata(metadata)
             assert cutover_strategy.is_enabled() == expected_result

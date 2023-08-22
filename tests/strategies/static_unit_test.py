@@ -1,6 +1,6 @@
 import pytest
 
-from ioet_feature_flag.strategies.static import build_static_type
+from ioet_feature_flag.strategies import Static
 
 
 class TestStaticStrategy:
@@ -13,6 +13,5 @@ class TestStaticStrategy:
             "enabled": is_enabled,
             "type": "static",
         }
-        static_strategy = build_static_type(metadata)
-
+        static_strategy = Static.from_metadata(metadata)
         assert static_strategy.is_enabled() == is_enabled
