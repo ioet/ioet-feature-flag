@@ -18,7 +18,9 @@ class Cutover(Strategy):
         try:
             date = datetime.datetime.strptime(metadata.get("date"), "%Y-%m-%d %H:%M")
         except ValueError as e:
-            raise InvalidToggleAttribute(f"The provided date for the toggle is not valid: {str(e)}.")
+            raise InvalidToggleAttribute(
+                f"The provided date for the toggle is not valid: {str(e)}."
+            )
 
         return cls(
             enabled=metadata.get('enabled', False),
