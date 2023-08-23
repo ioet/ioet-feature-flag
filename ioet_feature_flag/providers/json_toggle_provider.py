@@ -4,6 +4,7 @@ import os
 
 from ..exceptions import ToggleNotFoundError, ToggleEnvironmentError
 from .provider import Provider
+from ..strategies import get_toggle_strategy
 
 
 class JsonToggleProvider(Provider):
@@ -29,7 +30,7 @@ class JsonToggleProvider(Provider):
                 )
 
             return tuple(
-                bool(toggle_value.get("enabled"))
+                get_toggle_strategy(toggle_value).is_enabled()
                 for toggle_name, toggle_value in environment_toggles.items()
                 if toggle_name in toggle_names
             )
