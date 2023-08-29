@@ -32,5 +32,5 @@ class JsonToggleProvider(Provider):
             return tuple(
                 get_toggle_strategy(environment_toggles.get(toggle_name)).is_enabled()
                 for toggle_name in toggle_names
-                if environment_toggles.get(toggle_name)
+                if toggle_name in environment_toggles
             )
