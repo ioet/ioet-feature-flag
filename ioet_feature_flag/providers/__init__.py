@@ -1,3 +1,4 @@
 from .provider import Provider
 from .aws_appconfig_toggle_provider import AWSAppConfigToggleProvider
 from .json_toggle_provider import JsonToggleProvider
+from .yaml_toggle_provider import YamlToggleProvider

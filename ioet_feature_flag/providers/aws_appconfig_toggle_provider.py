@@ -28,7 +28,7 @@ class AWSAppConfigToggleProvider(Provider):
             )
 
         return tuple(
-            get_toggle_strategy(toggle_value).is_enabled()
-            for toggle_name, toggle_value in toggles.items()
-            if toggle_name in toggle_names
+            get_toggle_strategy(toggles.get(toggle_name)).is_enabled()
+            for toggle_name in toggle_names
+            if toggles.get(toggle_name)
         )
