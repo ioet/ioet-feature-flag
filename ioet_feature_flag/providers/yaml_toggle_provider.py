@@ -1,4 +1,4 @@
-import json
+import yaml
 import typing
 import os
 
@@ -7,7 +7,7 @@ from .provider import Provider
 from ..strategies import get_toggle_strategy
 
 
-class JsonToggleProvider(Provider):
+class YamlToggleProvider(Provider):
     def __init__(self, toggles_file_path: str) -> None:
         self.path = toggles_file_path
         self._environment = os.getenv("ENVIRONMENT")
@@ -18,7 +18,7 @@ class JsonToggleProvider(Provider):
 
     def get_toggles(self, toggle_names: typing.List[str]) -> typing.Tuple[bool, ...]:
         with open(self.path, "r") as toggles_file:
-            toggles = json.load(toggles_file)
+            toggles = yaml.safe_load(toggles_file)
             environment_toggles = toggles[self._environment]
 
             missing_toogles = [
