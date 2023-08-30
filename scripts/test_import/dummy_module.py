@@ -1,7 +1,6 @@
 import ioet_feature_flag
 
-provider = ioet_feature_flag.JsonToggleProvider("./dummy-flags.json")
-toggles = ioet_feature_flag.Toggles(provider=provider)
+toggles = ioet_feature_flag.Toggles()
 
 
 @toggles.toggle_decision

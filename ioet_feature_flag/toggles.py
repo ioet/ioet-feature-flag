@@ -1,12 +1,20 @@
 from functools import wraps
 
+import typing
+
 from . import exceptions, types
-from .providers import Provider
+from .providers import Provider, YamlToggleProvider
+
+
+_TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
 
 class Toggles:
-    def __init__(self, provider: Provider) -> None:
-        self.provider = provider
+    def __init__(self, provider: typing.Optional[Provider] = None) -> None:
+        if provider:
+            self._provider = provider
+            return
+        self._provider = YamlToggleProvider(_TOGGLES_LOCATION)
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
         @wraps(decision_function)
@@ -31,6 +39,6 @@ class Toggles:
                     )
                 )
 
-            return decision_function(self.provider.get_toggles, when_on, when_off)
+            return decision_function(self._provider.get_toggles, when_on, when_off)
 
         return _wraps
