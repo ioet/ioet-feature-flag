@@ -1,3 +1,4 @@
 test:
     dummy-flag:
         enabled: true
+        type: static
