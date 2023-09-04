@@ -4,7 +4,7 @@ function test_import() {
     poetry add ../ioet-feature-flag
     poetry add pytest
     export ENVIRONMENT="test"
-    cp ../ioet-feature-flag/scripts/test_import/* ./
+    cp -r ../ioet-feature-flag/scripts/test_import/* ./
     poetry run pytest
     cd ../ioet-feature-flag
 
