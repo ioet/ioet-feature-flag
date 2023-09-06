@@ -4,6 +4,7 @@ import typing
 
 from . import exceptions, types
 from .providers import Provider, YamlToggleProvider
+from .router import Router
 
 
 _TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
@@ -11,10 +12,9 @@ _TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
 class Toggles:
     def __init__(self, provider: typing.Optional[Provider] = None) -> None:
-        if provider:
-            self._provider = provider
-            return
-        self._provider = YamlToggleProvider(_TOGGLES_LOCATION)
+        if not provider:
+            provider = YamlToggleProvider(_TOGGLES_LOCATION)
+        self._router = Router(provider)
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
         @wraps(decision_function)
@@ -39,6 +39,6 @@ class Toggles:
                     )
                 )
 
-            return decision_function(self._provider.get_toggles, when_on, when_off)
+            return decision_function(self._router.get_toggles, when_on, when_off)
 
         return _wraps
