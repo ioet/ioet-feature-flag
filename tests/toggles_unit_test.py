@@ -2,6 +2,7 @@ import pytest
 
 from ioet_feature_flag import Toggles
 from ioet_feature_flag.exceptions import InvalidDecisionFunction
+from ioet_feature_flag.router import Router
 
 
 class TestTogglesDecisionMethod:
@@ -9,13 +10,22 @@ class TestTogglesDecisionMethod:
         provider = mocker.Mock()
         when_on = mocker.Mock()
         when_off = mocker.Mock()
+        get_toggles = mocker.Mock()
+        router = mocker.create_autospec(
+            Router,
+            get_toggles=get_toggles
+        )
+        mocker.patch(
+            "ioet_feature_flag.toggles.Router",
+            return_value=router,
+        )
         decision_function = mocker.Mock(return_value=when_on)
         toggles = Toggles(provider=provider)
 
         decision = toggles.toggle_decision(decision_function)
         decided_value = decision(when_on=when_on, when_off=when_off)
 
-        decision_function.assert_called_with(provider.get_toggles, when_on, when_off)
+        decision_function.assert_called_with(router.get_toggles, when_on, when_off)
         assert decided_value == when_on
 
     def test__raises_an_error_when_toggle_values_are_from_different_types(self, mocker):
