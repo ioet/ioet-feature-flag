@@ -6,13 +6,14 @@ from .strategies import get_toggle_strategy
 
 _TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
+
 class Router:
     def __init__(self, provider: typing.Optional[Provider]):
         if provider:
             self._provider = provider
             return
         self._provider = YamlToggleProvider(_TOGGLES_LOCATION)
-    
+
     def get_toggles(self, toggle_names: typing.List[str]) -> typing.Tuple[bool, ...]:
         available_toggles = self._provider.get_toggle_list()
 

@@ -3,7 +3,6 @@ import typing
 from ..helpers import AppConfigHelper
 from ..exceptions import ToggleNotFoundError
 from .provider import Provider
-from ..strategies import get_toggle_strategy
 
 
 class AWSAppConfigToggleProvider(Provider):

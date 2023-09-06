@@ -75,4 +75,5 @@ class TestGetTogglesMethod:
         with pytest.raises(ToggleNotFoundError) as error:
             toggle_provider.get_toggle_attributes("another_toggle")
 
-        assert str(error.value) == "The toggle another_toggle was not found in the test-env environment."
+        expected_message = "The toggle another_toggle was not found in the test-env environment."
+        assert str(error.value) == expected_message

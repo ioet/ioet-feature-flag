@@ -3,8 +3,8 @@ import pytest
 import os
 import typing
 
-from ioet_feature_flag.providers import YamlToggleProvider, Provider
-from ioet_feature_flag.exceptions import ToggleNotFoundError, ToggleEnvironmentError
+from ioet_feature_flag.providers import YamlToggleProvider
+from ioet_feature_flag.exceptions import ToggleNotFoundError
 from ioet_feature_flag.router import Router
 
 _TOGGLES_FILE = "/tmp/app_toggles_test.yaml"

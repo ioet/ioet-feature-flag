@@ -4,7 +4,6 @@ import os
 
 from ..exceptions import ToggleNotFoundError, ToggleEnvironmentError
 from .provider import Provider
-from ..strategies import get_toggle_strategy
 
 
 class JsonToggleProvider(Provider):

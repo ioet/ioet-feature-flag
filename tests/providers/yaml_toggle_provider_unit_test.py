@@ -93,7 +93,10 @@ class TestGetTogglesMethod:
         with pytest.raises(ToggleNotFoundError) as error:
             toggle_provider.get_toggle_attributes("another_toggle")
 
-        assert str(error.value) == f"The toggle another_toggle was not found in the {environment_name} environment."
+        expected_message = (
+            f"The toggle another_toggle was not found in the {environment_name} environment."
+        )
+        assert str(error.value) == expected_message
 
     def test_validate_no_environment(
         self,
@@ -129,4 +132,8 @@ class TestGetTogglesMethod:
         with pytest.raises(ToggleEnvironmentError) as error:
             YamlToggleProvider(_TOGGLES_FILE)
 
-        assert str(error.value) == f"The environment {environment_name} was not found in the provided {_TOGGLES_FILE} toggles file."
+        expected_message = (
+            f"The environment {environment_name} was not found "
+            f"in the provided {_TOGGLES_FILE} toggles file."
+        )
+        assert str(error.value) == expected_message
