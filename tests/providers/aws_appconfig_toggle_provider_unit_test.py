@@ -21,7 +21,7 @@ class TestGetTogglesMethod:
         "ioet_feature_flag.providers.aws_appconfig_toggle_provider.AppConfigHelper",
         autospec=True,
     )
-    def test__returns_the_toggles_specified_in_the_config(self, appconfig_cls):
+    def test_get_toggle_list(self, appconfig_cls):
         toggles = {
             "some_toggle": {"enabled": True},
             "another_toggle": {"enabled": False}
@@ -33,16 +33,35 @@ class TestGetTogglesMethod:
         appconfig_cls.return_value = mock_appconfig
 
         toggle_provider: Provider = AWSAppConfigToggleProvider()
-        some_toggle, another_toggle = toggle_provider.get_toggles(["some_toggle", "another_toggle"])
+        toggle_list = toggle_provider.get_toggle_list()
 
-        assert some_toggle == toggles["some_toggle"]["enabled"]
-        assert another_toggle == toggles["another_toggle"]["enabled"]
+        assert toggle_list == ["some_toggle", "another_toggle"]
 
     @mock.patch(
         "ioet_feature_flag.providers.aws_appconfig_toggle_provider.AppConfigHelper",
         autospec=True,
     )
-    def test__raises_an_error__if_one_of_the_toggles_does_not_exist(self, appconfig_cls):
+    def test_get_toggle_attribute(self, appconfig_cls):
+        toggles = {
+            "some_toggle": {"enabled": True},
+            "another_toggle": {"enabled": False}
+        }
+        mock_appconfig = mock.create_autospec(
+            appconfig_helper.AppConfigHelper,
+            config=toggles,
+        )
+        appconfig_cls.return_value = mock_appconfig
+
+        toggle_provider: Provider = AWSAppConfigToggleProvider()
+        some_toggle_attributes = toggle_provider.get_toggle_attributes("some_toggle")
+
+        assert some_toggle_attributes == {"enabled": True}
+
+    @mock.patch(
+        "ioet_feature_flag.providers.aws_appconfig_toggle_provider.AppConfigHelper",
+        autospec=True,
+    )
+    def test_get_toggle_attribute_with_invalid_toggle(self, appconfig_cls):
         toggles = {
             "some_toggle": {"enabled": True},
         }
@@ -54,6 +73,6 @@ class TestGetTogglesMethod:
         toggle_provider: Provider = AWSAppConfigToggleProvider()
 
         with pytest.raises(ToggleNotFoundError) as error:
-            toggle_provider.get_toggles(["some_toggle", "another_toggle"])
+            toggle_provider.get_toggle_attributes("another_toggle")
 
-        assert str(error.value) == 'The follwing toggles where not found: another_toggle'
+        assert str(error.value) == "The toggle another_toggle was not found in the test-env environment."

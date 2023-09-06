@@ -34,7 +34,7 @@ def _del_environment(monkeypatch):
 
 class TestGetTogglesMethod:
     @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
-    def test__returns_the_toggles_specified_in_the_file_when_called_on_environment(
+    def test_get_toggle_list(
         self,
         environment_name: str,
         monkeypatch,
@@ -50,15 +50,12 @@ class TestGetTogglesMethod:
         add_toggles(toggles)
 
         toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
-        some_toggle, another_toggle = toggle_provider.get_toggles(
-            ["some_toggle", "another_toggle"]
-        )
+        toggle_list = toggle_provider.get_toggle_list()
 
-        assert some_toggle == toggles[environment_name]["some_toggle"]["enabled"]
-        assert another_toggle == toggles[environment_name]["another_toggle"]["enabled"]
+        assert toggle_list == ["some_toggle", "another_toggle"]
 
     @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
-    def test__raises_an_error__if_one_of_the_toggles_does_not_exist(
+    def test_get_toggle_attribute(
         self,
         add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
         environment_name: str,
@@ -73,20 +70,38 @@ class TestGetTogglesMethod:
         add_toggles(toggles)
         toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
 
+        some_toggle_attributes = toggle_provider.get_toggle_attributes("some_toggle")
+
+        assert some_toggle_attributes == {"enabled": True}
+
+    @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
+    def test_get_toggle_attribute_with_invalid_toggle(
+        self,
+        add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
+        environment_name: str,
+        monkeypatch,
+    ):
+        monkeypatch.setenv("ENVIRONMENT", environment_name)
+        toggles = {
+            environment_name: {
+                "some_toggle": {"enabled": True},
+            }
+        }
+        add_toggles(toggles)
+        toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
+
         with pytest.raises(ToggleNotFoundError) as error:
-            toggle_provider.get_toggles(["some_toggle", "another_toggle"])
+            toggle_provider.get_toggle_attributes("another_toggle")
 
-        assert (
-            str(error.value) == "The follwing toggles where not found: another_toggle"
-        )
+        assert str(error.value) == f"The toggle another_toggle was not found in the {environment_name} environment."
 
-    def test__raises_an_error_when_environment_not_specified(
+    def test_validate_no_environment(
         self,
         add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
     ):
         toggles = {
-            "undefined_env": {
-                "some_toggle": {"enabled": True}
+            "some_env": {
+                "some_toggle": {"enabled": True},
             }
         }
         add_toggles(toggles)
@@ -94,7 +109,24 @@ class TestGetTogglesMethod:
         with pytest.raises(ToggleEnvironmentError) as error:
             JsonToggleProvider(_TOGGLES_FILE)
 
-        assert (
-            str(error.value)
-            == "Could not retrieve toggles: Toggle environment not specified"
-        )
+        assert str(error.value) == "Could not retrieve toggles: Toggle environment not specified."
+
+    @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
+    def test_validate_invalid_environment(
+        self,
+        add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
+        environment_name: str,
+        monkeypatch,
+    ):
+        monkeypatch.setenv("ENVIRONMENT", environment_name)
+        toggles = {
+            "some_env": {
+                "some_toggle": {"enabled": True},
+            }
+        }
+        add_toggles(toggles)
+
+        with pytest.raises(ToggleEnvironmentError) as error:
+            JsonToggleProvider(_TOGGLES_FILE)
+
+        assert str(error.value) == f"The environment {environment_name} was not found in the provided {_TOGGLES_FILE} toggles file."

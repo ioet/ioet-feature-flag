@@ -11,19 +11,19 @@ class Cutover(Strategy):
         self._date = date
 
     @classmethod
-    def from_metadata(cls, metadata: typing.Dict) -> "Cutover":
-        if not metadata.get("date"):
+    def from_attributes(cls, attributes: typing.Dict) -> "Cutover":
+        if not attributes.get("date"):
             raise MissingToggleAttributes("The toggle type 'cutover' requires a 'date' attribute")
 
         try:
-            date = datetime.datetime.strptime(metadata.get("date"), "%Y-%m-%d %H:%M")
+            date = datetime.datetime.strptime(attributes.get("date"), "%Y-%m-%d %H:%M")
         except ValueError as e:
             raise InvalidToggleAttribute(
                 f"The provided date for the toggle is not valid: {str(e)}."
             )
 
         return cls(
-            enabled=metadata.get('enabled', False),
+            enabled=attributes.get('enabled', False),
             date=date,
         )
 

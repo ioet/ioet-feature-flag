@@ -6,7 +6,7 @@ import typing
 class Strategy(abc.ABC):
     @classmethod
     @abc.abstractmethod
-    def from_metadata(cls, metadata: typing.Dict):
+    def from_attributes(cls, attributes: typing.Dict):
         raise NotImplementedError
 
     @abc.abstractmethod
