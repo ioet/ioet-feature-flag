@@ -3,11 +3,8 @@ from functools import wraps
 import typing
 
 from . import exceptions, types
-from .providers import Provider, YamlToggleProvider
+from .providers import Provider
 from .router import Router
-
-
-_TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
 
 class Toggles:
