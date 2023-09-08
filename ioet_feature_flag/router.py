@@ -8,11 +8,8 @@ _TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
 
 class Router:
-    def __init__(self, provider: typing.Optional[Provider]):
-        if provider:
-            self._provider = provider
-            return
-        self._provider = YamlToggleProvider(_TOGGLES_LOCATION)
+    def __init__(self, provider: typing.Optional[Provider] = None):
+        self._provider = provider or YamlToggleProvider(_TOGGLES_LOCATION)
 
     def get_toggles(self, toggle_names: typing.List[str]) -> typing.Tuple[bool, ...]:
         available_toggles = self._provider.get_toggle_list()
@@ -30,12 +27,12 @@ class Router:
             for toggle_name in toggle_names
         ]
 
-        toggle_strategies = [
+        toggle_types = [
             get_toggle_strategy(toggle_attribute)
             for toggle_attribute in toggle_attributes
         ]
 
         return tuple(
             toggle.is_enabled()
-            for toggle in toggle_strategies
+            for toggle in toggle_types
         )

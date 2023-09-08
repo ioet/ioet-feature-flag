@@ -16,7 +16,7 @@ def _mock_aws_env_variables(monkeypatch):
     monkeypatch.setenv("AWS_APPCONFIG_PROFILE", "test-profile")
 
 
-class TestGetTogglesMethod:
+class TestAWSAppConfigToggleProvider:
     @mock.patch(
         "ioet_feature_flag.providers.aws_appconfig_toggle_provider.AppConfigHelper",
         autospec=True,

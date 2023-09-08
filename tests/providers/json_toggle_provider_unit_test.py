@@ -32,7 +32,7 @@ def _del_environment(monkeypatch):
         monkeypatch.delenv("ENVIRONMENT")
 
 
-class TestGetTogglesMethod:
+class TestJsonToggleProvider:
     @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
     def test_get_toggle_list(
         self,

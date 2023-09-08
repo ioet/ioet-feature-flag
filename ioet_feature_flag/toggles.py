@@ -12,8 +12,6 @@ _TOGGLES_LOCATION = './feature_toggles/feature-toggles.yaml'
 
 class Toggles:
     def __init__(self, provider: typing.Optional[Provider] = None) -> None:
-        if not provider:
-            provider = YamlToggleProvider(_TOGGLES_LOCATION)
         self._router = Router(provider)
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
