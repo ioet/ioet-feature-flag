@@ -1,3 +1,6 @@
+#!/bin/bash
+set -eo pipefail
+
 function test_import() {
     cd ../
     poetry new test-project && cd test-project
