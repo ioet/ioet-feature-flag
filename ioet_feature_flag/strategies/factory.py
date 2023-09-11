@@ -6,8 +6,8 @@ from .static import Static
 from ..exceptions import InvalidToggleType
 
 
-def get_toggle_strategy(metadata: typing.Dict) -> Strategy:
-    toggle_type = metadata.get('type', 'static')
+def get_toggle_strategy(attributes: typing.Dict) -> Strategy:
+    toggle_type = attributes.get('type', 'static')
     strategies = {
         'static': Static,
         'cutover': Cutover,
@@ -21,4 +21,4 @@ def get_toggle_strategy(metadata: typing.Dict) -> Strategy:
             f" Supported types are {', '.join(allowed_builders)}"
         )
 
-    return strategy.from_metadata(metadata)
+    return strategy.from_attributes(attributes)

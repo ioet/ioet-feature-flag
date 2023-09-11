@@ -3,7 +3,6 @@ import typing
 from ..helpers import AppConfigHelper
 from ..exceptions import ToggleNotFoundError
 from .provider import Provider
-from ..strategies import get_toggle_strategy
 
 
 class AWSAppConfigToggleProvider(Provider):
@@ -15,20 +14,16 @@ class AWSAppConfigToggleProvider(Provider):
             os.environ.get("AWS_APPCONFIG_MAX_CONFIG_AGE", 45),
         )
 
-    def get_toggles(self, toggle_names: typing.List[str]) -> typing.Tuple[bool, ...]:
-        self._appconfig.update_config()
+    def get_toggle_list(self) -> typing.List[str]:
         toggles: typing.Dict = self._appconfig.config
+        return list(toggles.keys())
 
-        missing_toogles = [
-            toggle for toggle in toggle_names if toggle not in toggles
-        ]
-        if missing_toogles:
+    def get_toggle_attributes(self, toggle_name: str) -> typing.Dict:
+        toggles: typing.Dict = self._appconfig.config
+        toggle_attributes = toggles.get(toggle_name)
+        if not toggle_attributes:
             raise ToggleNotFoundError(
-                f"The follwing toggles where not found: {', '.join(missing_toogles)}"
+                f"The toggle {toggle_name} was not found in the"
+                f" {os.environ.get('AWS_APPCONFIG_ENV')} environment."
             )
-
-        return tuple(
-            get_toggle_strategy(toggles.get(toggle_name)).is_enabled()
-            for toggle_name in toggle_names
-            if toggle_name in toggles
-        )
+        return toggle_attributes

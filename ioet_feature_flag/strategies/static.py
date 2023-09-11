@@ -8,9 +8,9 @@ class Static(Strategy):
         self._enabled = enabled
 
     @classmethod
-    def from_metadata(cls, metadata: typing.Dict) -> "Static":
+    def from_attributes(cls, attributes: typing.Dict) -> "Static":
         return cls(
-            enabled=metadata.get('enabled', False),
+            enabled=attributes.get('enabled', False),
         )
 
     def is_enabled(self) -> bool:

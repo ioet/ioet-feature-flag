@@ -8,18 +8,18 @@ from ioet_feature_flag.exceptions import InvalidToggleType
 
 
 @pytest.mark.parametrize(
-    "metadata, expected_result, expected_exception",
+    "attributes, expected_result, expected_exception",
     [
         ({"type": "static"}, Static, None),
         ({"type": "cutover", "date": "2023-08-21 08:00"}, Cutover, None),
         ({"type": "non_existent_type"}, None, InvalidToggleType),
     ]
 )
-def test_get_toggle_strategy(metadata, expected_result, expected_exception):
-    metadata["enabled"] = True
+def test_get_toggle_strategy(attributes, expected_result, expected_exception):
+    attributes["enabled"] = True
     if expected_exception:
         with pytest.raises(expected_exception):
-            get_toggle_strategy(metadata)
+            get_toggle_strategy(attributes)
     else:
-        strategy = get_toggle_strategy(metadata)
+        strategy = get_toggle_strategy(attributes)
         assert isinstance(strategy, expected_result)

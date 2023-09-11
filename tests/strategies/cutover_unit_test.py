@@ -20,21 +20,21 @@ class TestCutoverStrategy:
         ]
     )
     @freeze_time("2023-08-20 14:00:00", tz_offset=-4)
-    def test__returns_toggles_specified_in_metadata(
+    def test__returns_toggles_specified_in_attributes(
         self,
         is_enabled,
         date,
         expected_result,
         expected_exception,
     ):
-        metadata = {
+        attributes = {
             "enabled": is_enabled,
             "type": "cutover",
             "date": date,
         }
         if expected_exception:
             with pytest.raises(expected_exception):
-                Cutover.from_metadata(metadata)
+                Cutover.from_attributes(attributes)
         else:
-            cutover_strategy = Cutover.from_metadata(metadata)
+            cutover_strategy = Cutover.from_attributes(attributes)
             assert cutover_strategy.is_enabled() == expected_result

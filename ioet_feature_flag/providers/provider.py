@@ -4,5 +4,9 @@ import typing
 
 class Provider(abc.ABC):
     @abc.abstractmethod
-    def get_toggles(self, toggle_names: typing.List[str]) -> typing.Tuple[bool, ...]:
+    def get_toggle_list(self) -> typing.List[str]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_toggle_attributes(self, name: str) -> typing.Dict:
         raise NotImplementedError
