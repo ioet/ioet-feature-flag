@@ -1,6 +1,3 @@
-import typing
-
-import pytest
 from faker import Faker
 
 from ioet_feature_flag import ToggleContext
@@ -29,4 +26,4 @@ class TestGetMethod:
 
         custom_attribute = context.get("custom_attr")
 
-        assert custom_attribute == None
+        assert custom_attribute is None
