@@ -2,6 +2,8 @@ import abc
 
 import typing
 
+from ..toggle_context import ToggleContext
+
 
 class Strategy(abc.ABC):
     @classmethod
@@ -10,5 +12,5 @@ class Strategy(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def is_enabled(self) -> bool:
+    def is_enabled(self, context: typing.Optional[ToggleContext] = None) -> bool:
         raise NotImplementedError

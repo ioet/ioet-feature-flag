@@ -6,26 +6,31 @@ from ioet_feature_flag.router import Router
 
 
 class TestTogglesDecisionMethod:
-    def test__injects_the_method_to_retrieve_toggles_to_the_decision_method(self, mocker):
+    @pytest.mark.parametrize("uses_context", [True, False])
+    def test__injects_the_method_to_retrieve_toggles_to_the_decision_method(
+        self, mocker, uses_context: bool
+    ):
         provider = mocker.Mock()
         when_on = mocker.Mock()
         when_off = mocker.Mock()
         get_toggles = mocker.Mock()
-        router = mocker.create_autospec(
-            Router,
-            get_toggles=get_toggles
-        )
+        router = mocker.create_autospec(Router, get_toggles=get_toggles)
         mocker.patch(
             "ioet_feature_flag.toggles.Router",
             return_value=router,
         )
         decision_function = mocker.Mock(return_value=when_on)
         toggles = Toggles(provider=provider)
+        toggle_context = mocker.Mock() if uses_context else None
 
         decision = toggles.toggle_decision(decision_function)
-        decided_value = decision(when_on=when_on, when_off=when_off)
+        decided_value = decision(
+            when_on=when_on, when_off=when_off, context=toggle_context
+        )
 
-        decision_function.assert_called_with(router.get_toggles, when_on, when_off)
+        decision_function.assert_called_with(
+            router.get_toggles, when_on, when_off, toggle_context
+        )
         assert decided_value == when_on
 
     def test__raises_an_error_when_toggle_values_are_from_different_types(self, mocker):
@@ -36,7 +41,9 @@ class TestTogglesDecisionMethod:
         toggles = Toggles(provider=provider)
 
         with pytest.raises(InvalidDecisionFunction) as error:
-            toggles.toggle_decision(decision_function)(when_on=when_on, when_off=when_off)
+            toggles.toggle_decision(decision_function)(
+                when_on=when_on, when_off=when_off
+            )
 
         assert str(error.value) == (
             "when_on and when_off parameters must be of the same type. "
@@ -51,7 +58,9 @@ class TestTogglesDecisionMethod:
         toggles = Toggles(provider=provider)
 
         with pytest.raises(InvalidDecisionFunction) as error:
-            toggles.toggle_decision(decision_function)(when_on=when_on, when_off=when_off)
+            toggles.toggle_decision(decision_function)(
+                when_on=when_on, when_off=when_off
+            )
 
         assert str(error.value) == (
             "when_on and when_off parameters can't be boolean. "

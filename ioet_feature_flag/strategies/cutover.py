@@ -2,6 +2,7 @@ import datetime
 import typing
 
 from .strategy import Strategy
+from ..toggle_context import ToggleContext
 from ..exceptions import InvalidToggleAttribute, MissingToggleAttributes
 
 
@@ -13,7 +14,9 @@ class Cutover(Strategy):
     @classmethod
     def from_attributes(cls, attributes: typing.Dict) -> "Cutover":
         if not attributes.get("date"):
-            raise MissingToggleAttributes("The toggle type 'cutover' requires a 'date' attribute")
+            raise MissingToggleAttributes(
+                "The toggle type 'cutover' requires a 'date' attribute"
+            )
 
         try:
             date = datetime.datetime.strptime(attributes.get("date"), "%Y-%m-%d %H:%M")
@@ -23,11 +26,11 @@ class Cutover(Strategy):
             )
 
         return cls(
-            enabled=attributes.get('enabled', False),
+            enabled=attributes.get("enabled", False),
             date=date,
         )
 
-    def is_enabled(self) -> bool:
+    def is_enabled(self, context: typing.Optional[ToggleContext] = None) -> bool:
         current_date = datetime.datetime.utcnow()
         if self._enabled and current_date >= self._date:
             return True

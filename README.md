@@ -60,7 +60,7 @@ It is also possible to use other formats or providers, such as JSON or AWS AppCo
 
 ## Usage
 
-Example made by @eguezgustavo
+Example made by @eguezgustavo 
 
 ```python
 import ioet_feature_flag
@@ -69,9 +69,10 @@ toggles = ioet_feature_flag.Toggles()
 
 
 @toggles.toggle_decision
-def usage_of_order_cancellation_email(get_toggles, when_on, when_off):
+def usage_of_order_cancellation_email(get_toggles, when_on, when_off, context = None):
     order_cancellation_enabled, auto_refund_enabled = get_toggles(
-        ["isOrderCancellationEnabled", "isAutoRefundEnable"]
+        ["isOrderCancellationEnabled", "isAutoRefundEnable"],
+        context
     )
     if order_cancellation_enabled and auto_refund_enabled:
         return when_on
@@ -90,10 +91,15 @@ def create_email_body(client_name: str, sales_order_number: str) -> str:
 
     Your company team
     """
-
+    
+    toggle_context = ioet_feature_flag.ToggleContext(
+      username=client_name,
+      role="client"
+    )
     cancellation_text = usage_of_order_cancellation_email(
         when_on=f"To cancel your order follow this link: http://cancel/{sales_order_number}",
         when_off="",
+        context=toggle_context
     )
 
     return f"""
@@ -106,7 +112,7 @@ body = create_email_body("Gustavo", "2342937")
 print(body)
 ```
 
-You can also toggle between function calls, like this:
+You can also toggle between function calls without sending context, like this:
 ```python
 def gen_one_pokedex():
   # Let's imagine that this is actually an API call and
@@ -118,9 +124,11 @@ def gen_two_pokedex():
   return ["Chikorita", "Totodile", "Cyndaquil"]
 
 
+# Here the decision function is declared with a context param
+# but when called, you may not need to send it
 @toggles.toggle_decision
-def decide_pokedex_usage(get_toggles, when_on, when_off):
-    use_gen_two_pokedex = get_toggles(["useGenTwoPokedex"])
+def decide_pokedex_usage(get_toggles, when_on, when_off, context = None):
+    use_gen_two_pokedex = get_toggles(["useGenTwoPokedex"], context)
     if use_gen_two_pokedex:
         return when_on
     return when_off

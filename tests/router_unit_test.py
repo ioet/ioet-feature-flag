@@ -45,7 +45,7 @@ class TestGetTogglesMethod:
         toggles = {
             environment_name: {
                 "some_toggle": {"enabled": True},
-                "another_toggle": {"enabled": False}
+                "another_toggle": {"enabled": False},
             }
         }
         add_toggles(toggles)
@@ -67,11 +67,7 @@ class TestGetTogglesMethod:
         monkeypatch,
     ):
         monkeypatch.setenv("ENVIRONMENT", environment_name)
-        toggles = {
-            environment_name: {
-                "some_toggle": {"enabled": True}
-            }
-        }
+        toggles = {environment_name: {"some_toggle": {"enabled": True}}}
         add_toggles(toggles)
         toggle_provider = YamlToggleProvider(_TOGGLES_FILE)
         toggle_router = Router(toggle_provider)
@@ -82,3 +78,27 @@ class TestGetTogglesMethod:
         assert (
             str(error.value) == "The follwing toggles where not found: another_toggle"
         )
+
+    @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
+    def test__uses_the_toggle_context_when_it_is_provided(
+        self,
+        mocker,
+        monkeypatch,
+        add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
+        environment_name: str,
+    ):
+        monkeypatch.setenv("ENVIRONMENT", environment_name)
+        toggles = {environment_name: {"some_toggle": {"enabled": True}}}
+        add_toggles(toggles)
+        toggle_strategy = mocker.Mock(is_enabled=mocker.Mock(return_value=True))
+        toggle_context = mocker.Mock()
+        mocker.patch(
+            "ioet_feature_flag.router.get_toggle_strategy",
+            return_value=toggle_strategy,
+        )
+        toggle_provider = YamlToggleProvider(_TOGGLES_FILE)
+        toggle_router = Router(toggle_provider)
+
+        toggle_router.get_toggles(["some_toggle"], toggle_context)
+
+        toggle_strategy.is_enabled.assert_called_with(context=toggle_context)
