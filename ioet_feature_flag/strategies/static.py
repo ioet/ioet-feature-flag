@@ -1,6 +1,7 @@
 import typing
 
 from .strategy import Strategy
+from ..toggle_context import ToggleContext
 
 
 class Static(Strategy):
@@ -10,8 +11,8 @@ class Static(Strategy):
     @classmethod
     def from_attributes(cls, attributes: typing.Dict) -> "Static":
         return cls(
-            enabled=attributes.get('enabled', False),
+            enabled=attributes.get("enabled", False),
         )
 
-    def is_enabled(self) -> bool:
+    def is_enabled(self, context: typing.Optional[ToggleContext] = None) -> bool:
         return self._enabled

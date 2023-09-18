@@ -5,6 +5,7 @@ import typing
 from . import exceptions, types
 from .providers import Provider
 from .router import Router
+from .toggle_context import ToggleContext
 
 
 class Toggles:
@@ -16,6 +17,7 @@ class Toggles:
         def _wraps(
             when_on: types.TOGGLED_VALUE,
             when_off: types.TOGGLED_VALUE,
+            context: typing.Optional[ToggleContext] = None,
         ):
             if str(type(when_on)) != str(type(when_off)):
                 raise exceptions.InvalidDecisionFunction(
@@ -34,6 +36,8 @@ class Toggles:
                     )
                 )
 
-            return decision_function(self._router.get_toggles, when_on, when_off)
+            return decision_function(
+                self._router.get_toggles, when_on, when_off, context
+            )
 
         return _wraps
