@@ -4,8 +4,8 @@ toggles = ioet_feature_flag.Toggles()
 
 
 @toggles.toggle_decision
-def dummy_decision(get_toggles, when_on, when_off):
-    is_enabled = get_toggles(["dummy-flag"])
+def dummy_decision(get_toggles, when_on, when_off, context=None):
+    is_enabled = get_toggles(["dummy-flag"], context)
     if is_enabled:
         return when_on
     return when_off
