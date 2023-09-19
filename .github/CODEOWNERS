@@ -1,3 +1,14 @@
-# Repoitory
+# Folders
 
-* @Mikkel-14 @FranLMSP @Rouderz @github-actions
+.github/* @Mikkel-14 @FranLMSP @Rouderz
+ioet_feature_flag/* @Mikkel-14 @FranLMSP @Rouderz
+scripts/* @Mikkel-14 @FranLMSP @Rouderz
+test/* @Mikkel-14 @FranLMSP @Rouderz
+
+# Files
+.flake8 @Mikkel-14 @FranLMSP @Rouderz
+.gitignore @Mikkel-14 @FranLMSP @Rouderz
+poetry.lock @Mikkel-14 @FranLMSP @Rouderz
+pyproject.toml @Mikkel-14 @FranLMSP @Rouderz
+pytest.ini @Mikkel-14 @FranLMSP @Rouderz
+README.md @Mikkel-14 @FranLMSP @Rouderz
