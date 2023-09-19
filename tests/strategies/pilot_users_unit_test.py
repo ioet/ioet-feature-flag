@@ -5,7 +5,7 @@ from ioet_feature_flag.exceptions import MissingToggleAttributes
 from ioet_feature_flag.toggle_context import ToggleContext
 
 
-class TestCutoverStrategy:
+class TestPilotUsersStrategy:
     @pytest.mark.parametrize(
         "is_enabled, current_user, allowed_users, expected_result, expected_exception",
         [
@@ -14,6 +14,10 @@ class TestCutoverStrategy:
             (True, 'allowed_user', 'allowed_user,another_user', True, None),
             (False, 'allowed_user', 'allowed_user', False, None),
             (False, 'allowed_user', 'allowed_user,another_user', False, None),
+            (True, 'not_allowed_user', 'allowed_user', False, None),
+            (True, 'not_allowed_user', 'allowed_user,another_user', False, None),
+            (False, 'not_allowed_user', 'allowed_user', False, None),
+            (False, 'not_allowed_user', 'allowed_user,another_user', False, None),
         ]
     )
     def test__returns_toggles_specified_in_attributes(
@@ -34,5 +38,5 @@ class TestCutoverStrategy:
             with pytest.raises(expected_exception):
                 PilotUsers.from_attributes(attributes)
         else:
-            cutover_strategy = PilotUsers.from_attributes(attributes)
-            assert cutover_strategy.is_enabled(context=toggle_context) == expected_result
+            pilot_users_strategy = PilotUsers.from_attributes(attributes)
+            assert pilot_users_strategy.is_enabled(context=toggle_context) == expected_result

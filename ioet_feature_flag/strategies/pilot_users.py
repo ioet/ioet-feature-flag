@@ -12,13 +12,13 @@ class PilotUsers(Strategy):
 
     @classmethod
     def from_attributes(cls, attributes: typing.Dict) -> "PilotUsers":
-        allowed_users = attributes.get('allowed_users')
+        allowed_users: str = attributes.get('allowed_users')
         if not allowed_users:
             raise MissingToggleAttributes("You must provide a list of allowed users")
 
         return cls(
             enabled=attributes.get('enabled', False),
-            allowed_users=allowed_users,
+            allowed_users=allowed_users.split(','),
         )
 
     def is_enabled(self, context: ToggleContext) -> bool:
