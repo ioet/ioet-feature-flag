@@ -1,21 +1,3 @@
-[README Owners]
+# Repoitory
 
-README.md @Mikkel-14 @FranLMSP @Rouderz
-
-[Folder Owners]
-
-.github/ @Mikkel-14 @FranLMSP @Rouderz
-ioet_feature_flag/ @Mikkel-14 @FranLMSP @Rouderz
-release_version_tools/ @Mikkel-14 @FranLMSP @Rouderz
-scripts/ @Mikkel-14 @FranLMSP @Rouderz
-tests/ @Mikkel-14 @FranLMSP @Rouderz
-
-[File Owners]
-
-.flake8 @Mikkel-14 @FranLMSP @Rouderz
-.gitignore @Mikkel-14 @FranLMSP @Rouderz
-CHANGELOG.md @Mikkel-14 @FranLMSP @Rouderz
-poetry.lock @Mikkel-14 @FranLMSP @Rouderz
-pyproject.toml @Mikkel-14 @FranLMSP @Rouderz
-pytest.ini @Mikkel-14 @FranLMSP @Rouderz
-.devcontainer/Dockerfile @Mikkel-14 @FranLMSP @Rouderz
+* @Mikkel-14 @FranLMSP @Rouderz
