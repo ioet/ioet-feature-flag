@@ -14,25 +14,19 @@ We recommend installing this library with [Poetry](https://python-poetry.org/) (
 
 To install an specific version (recommended):
 ```shell
-poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
-```
-
-To install the latest version:
-```shell
-poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git
+poetry add git+https://github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
 ```
 
 To install an specific version using `pip`:
 ```shell
-pip install git+ssh://git@github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
+pip install git+https://github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
 ```
 
-To install the latest version using `pip`:
+It is also possible to install with SSH instead of HTTPS by simply replacing `https://github.com` by `ssh://git@github.com`, although we recommend using SSH instead.
+Example:
 ```shell
-pip install git+ssh://git@github.com/ioet/ioet-feature-flag.git
+poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
 ```
-
-It is also possible to install with HTTPS instead of SSH by simply replacing `ssh://git@github.com` by `https://github.com`, although we recommend using SSH instead.
 
 If you want to, you can also clone this repository locally and install the library by specifying the folder in which the repo was cloned
 
