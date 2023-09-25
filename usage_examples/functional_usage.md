@@ -23,7 +23,7 @@ def create_email_body(client_name: str, sales_order_number: str) -> str:
     header = f"""
     Dear {client_name},
 
-    Your order number {sales_order_number} has bee approved.
+    Your order number {sales_order_number} has been approved.
     """
 
     footer = """

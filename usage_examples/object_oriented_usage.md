@@ -60,7 +60,7 @@ class CreateEmailBodyCase2:
         header = f"""
             Dear {client_name},
 
-            Your order number {sales_order_number} has bee approved.
+            Your order number {sales_order_number} has been approved.
             """
 
         footer = """
@@ -126,7 +126,7 @@ class CreateEmailBodyCase2:
         header = f"""
             Dear {client_name},
 
-            Your order number {sales_order_number} has bee approved.
+            Your order number {sales_order_number} has been approved.
             """
 
         footer = """
@@ -159,14 +159,14 @@ class CreateEmailBodyCase2:
         """
 
 ```
-> **Note:** Even though sending a toggle context is optinal, the parameter declaration on the decision function is *required* and needs to be defaulted to `None`.
+> **Note:** Even though sending a toggle context is optional, the parameter declaration on the decision function is *required* and needs to be defaulted to `None`.
 
 ## Toggling behavior
 Now the use case is ready to be used locally with the new feature. Providing that the environment variable is set to `dev`, the email body will look like this:
 ```
     Dear Alec,
 
-    Your order number 3456 has bee approved.
+    Your order number 3456 has been approved.
     
     To cancel your order follow this link: http://cancel/3456
 
@@ -180,7 +180,7 @@ Otherwise, it will look like this:
 ```
     Dear Alec,
 
-    Your order number 3456 has bee approved.
+    Your order number 3456 has been approved.
     
 
 
