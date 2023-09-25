@@ -20,7 +20,7 @@ To install with `pip`:
 pip install git+https://github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
 ```
 
-It is also possible to install with SSH instead of HTTPS by simply replacing `https://github.com` by `ssh://git@github.com`, although we recommend using SSH instead.
+It is also possible to install with SSH instead of HTTPS by simply replacing `https://github.com` by `ssh://git@github.com`.
 Example:
 ```shell
 poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
