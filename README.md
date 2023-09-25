@@ -10,29 +10,21 @@ Moreover, we are planning to support [AWS AppConfig](https://docs.aws.amazon.com
 ## Installation
 We are currently supporting Python version 3.9 as the minimum version required to install this library, as it is the oldest python version that our Internal Apps use.
 
-We recommend installing this library with [Poetry](https://python-poetry.org/) (you can find more about installing dependencies with poetry [here](https://python-poetry.org/docs/cli/#add)).
+To install with Poetry:
+```shell
+poetry add git+https://github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
+```
 
-To install an specific version (recommended):
+To install with `pip`:
+```shell
+pip install git+https://github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
+```
+
+It is also possible to install with SSH instead of HTTPS by simply replacing `https://github.com` by `ssh://git@github.com`.
+Example:
 ```shell
 poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
 ```
-
-To install the latest version:
-```shell
-poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git
-```
-
-To install an specific version using `pip`:
-```shell
-pip install git+ssh://git@github.com/ioet/ioet-feature-flag.git@<branch-or-tag>
-```
-
-To install the latest version using `pip`:
-```shell
-pip install git+ssh://git@github.com/ioet/ioet-feature-flag.git
-```
-
-It is also possible to install with HTTPS instead of SSH by simply replacing `ssh://git@github.com` by `https://github.com`, although we recommend using SSH instead.
 
 If you want to, you can also clone this repository locally and install the library by specifying the folder in which the repo was cloned
 
