@@ -145,7 +145,39 @@ And lastly, specify the AWS AppConfig provider like so:
 provider = ioet_feature_flag.AWSAppConfigToggleProvider()
 toggles = ioet_feature_flag.Toggles(provider=provider)
 ```
+## Currently supported feature flag types
+> Please note that all flags must be under a defined enviroment. The examples on this section show only the structure needed to declare a flag.
+### Static flag
+This is the most basic type: It toggles a code path on when the flag is `enabled`. The structure for this flag on the YAML file is the following:
+```yaml
+static-flag-name:
+  enabled: true # It can also be false
+  type: static
+```
 
+### Cutover flag
+It toggles a code path on when the flag is `enabled` and it is at or after the **initial datetime** specified for the flag.
+```yaml
+cutover-flag:
+  enabled: true
+  type: cutover
+  date: 2023-08-20 10:00
+```
+> **Please note**
+> - The datetime format for this flag is `%Y-%m-%d %H:%M`
+> - The time specified will be checked against UTC time. 
+
+
+### Pilot users flag
+It enables turning a code path on for a list of **specific users** when the flag is `enabled`. The allowed users must be inserted on a list. The following example shows the flag structure using a user's email:
+```yaml
+pilot-users-flag:
+  enabled: true
+  type: pilot_users
+  allowed_users:
+    - john.doe@email.com
+    - jane.doe@email.com
+  ```
 
 ## Considerations
 - Please note that the current implementation is subject to change.
