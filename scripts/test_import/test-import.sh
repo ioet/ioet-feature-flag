@@ -2,10 +2,9 @@
 set -eo pipefail
 
 function test_import_poetry() {
-    CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
     cd ../
     poetry new test-project-poetry && cd test-project-poetry
-    poetry add git+https://git@github.com/ioet/ioet-feature-flag.git@$CURRENT_BRANCH
+    poetry add git+https://git@github.com/ioet/ioet-feature-flag.git@$1
     poetry add pytest
     export ENVIRONMENT="test"
     cp -r ../ioet-feature-flag/scripts/test_import/* ./
@@ -15,11 +14,10 @@ function test_import_poetry() {
 }
 
 function test_import_pip() {
-    CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
     cd ../
     mkdir test-project-pip && cd test-project-pip
     python -m venv env && source env/bin/activate
-    pip install git+https://github.com/ioet/ioet-feature-flag.git@$CURRENT_BRANCH
+    pip install git+https://github.com/ioet/ioet-feature-flag.git@$1
     pip install -U pytest
     export ENVIRONMENT="test"
     cp -r ../ioet-feature-flag/scripts/test_import/* ./
@@ -27,5 +25,6 @@ function test_import_pip() {
     cd ../ioet-feature-flag
 }
 
-test_import_poetry
-test_import_pip
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+test_import_poetry $CURRENT_BRANCH
+test_import_pip $CURRENT_BRANCH

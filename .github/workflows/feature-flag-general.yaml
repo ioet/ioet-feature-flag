@@ -1,4 +1,4 @@
-name: Feature-Flag-Continues-Integration
+name: Feature-Flag-Continuous-Integration
 
 on:
     push:
@@ -74,11 +74,3 @@ jobs:
 
             - name: Test library import
               run: ./scripts/test_import/test-import.sh
-
-            - name: Python Semantic Release
-              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-              run: |
-                pip install python-semantic-release==7.34.6
-                git config --global user.name "github-actions"
-                git config --global user.email "action@github.com"
-                DEBUG='semantic_release.*' semantic-release publish -D commit_author="github-actions <action@github.com>"
