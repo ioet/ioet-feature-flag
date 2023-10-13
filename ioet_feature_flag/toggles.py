@@ -41,3 +41,9 @@ class Toggles:
             )
 
         return _wraps
+
+    def get_all_toggles(
+        self,
+        context: typing.Optional[ToggleContext] = None,
+    ):
+        return self._router.get_all_toggles(context)
