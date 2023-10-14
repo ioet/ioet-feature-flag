@@ -1,7 +1,7 @@
 import typing
 
 from .strategy import Strategy
-from ..exceptions import MissingToggleAttributes
+from ..exceptions import MissingToggleAttributes, InvalidToggleAttribute
 from ..toggle_context import ToggleContext
 
 
@@ -12,13 +12,16 @@ class PilotUsers(Strategy):
 
     @classmethod
     def from_attributes(cls, attributes: typing.Dict) -> "PilotUsers":
-        allowed_users: str = attributes.get('allowed_users')
+        allowed_users: typing.List[str] = attributes.get("allowed_users")
         if not allowed_users:
             raise MissingToggleAttributes("You must provide a list of allowed users")
 
+        if not isinstance(allowed_users, list):
+            raise InvalidToggleAttribute("The provided users must be in a list")
+
         return cls(
-            enabled=attributes.get('enabled', False),
-            allowed_users=allowed_users.split(','),
+            enabled=attributes.get("enabled", False),
+            allowed_users=[user.strip() for user in allowed_users],
         )
 
     def is_enabled(self, context: ToggleContext) -> bool:

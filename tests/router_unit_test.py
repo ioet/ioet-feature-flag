@@ -77,44 +77,37 @@ class TestGetTogglesMethod:
 
         toggle_strategy.is_enabled.assert_called_with(context=toggle_context)
 
-    @pytest.mark.parametrize("environment_name", [("production"), ("stage")])
     @freeze_time("2023-08-20 14:00:00", tz_offset=-4)
     def test__get_all_toggles(
         self,
-        monkeypatch,
-        add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
-        environment_name: str,
+        dependency_factory: typing.Callable,
     ):
-        monkeypatch.setenv("ENVIRONMENT", environment_name)
         toggles = {
-            environment_name: {
-                "some_toggle": {"enabled": True},
-                "another_toggle": {"enabled": False},
-                "pilot_users_toggle": {
-                    "enabled": True,
-                    "type": "pilot_users",
-                    "allowed_users": "test_user,another_user"
-                },
-                "another_pilot_users_toggle": {
-                    "enabled": True,
-                    "type": "pilot_users",
-                    "allowed_users": "another_user"
-                },
-                "cutover_strategy": {
-                    "enabled": True,
-                    "type": "cutover",
-                    "date": "2023-08-20 10:00"
-                },
-                "another_cutover_strategy": {
-                    "enabled": True,
-                    "type": "cutover",
-                    "date": "2023-08-20 16:00"
-                },
-            }
+            "some_toggle": {"enabled": True},
+            "another_toggle": {"enabled": False},
+            "pilot_users_toggle": {
+                "enabled": True,
+                "type": "pilot_users",
+                "allowed_users": ["test_user", "another_user"],
+            },
+            "another_pilot_users_toggle": {
+                "enabled": True,
+                "type": "pilot_users",
+                "allowed_users": ["another_user"]
+            },
+            "cutover_strategy": {
+                "enabled": True,
+                "type": "cutover",
+                "date": "2023-08-20 10:00"
+            },
+            "another_cutover_strategy": {
+                "enabled": True,
+                "type": "cutover",
+                "date": "2023-08-20 16:00"
+            },
         }
-        add_toggles(toggles)
-        toggle_provider = YamlToggleProvider(_TOGGLES_FILE)
-        toggle_router = Router(toggle_provider)
+        dependencies = dependency_factory(toggle_values=toggles)
+        toggle_router = Router(**dependencies)
         context = ToggleContext(username="test_user", role="")
 
         result = toggle_router.get_all_toggles(context=context)

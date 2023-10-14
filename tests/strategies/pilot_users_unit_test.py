@@ -3,7 +3,7 @@ import typing
 import pytest
 
 from ioet_feature_flag.strategies import PilotUsers
-from ioet_feature_flag.exceptions import MissingToggleAttributes
+from ioet_feature_flag.exceptions import MissingToggleAttributes, InvalidToggleAttribute
 
 
 class TestPilotUsersStrategy:
@@ -23,14 +23,17 @@ class TestPilotUsersStrategy:
         "is_enabled, current_user, allowed_users, expected_result, expected_exception",
         [
             (True, "allowed_user", "", False, MissingToggleAttributes),
-            (True, "allowed_user", "allowed_user", True, None),
-            (True, "allowed_user", "allowed_user,another_user", True, None),
-            (False, "allowed_user", "allowed_user", False, None),
-            (False, "allowed_user", "allowed_user,another_user", False, None),
-            (True, "not_allowed_user", "allowed_user", False, None),
-            (True, "not_allowed_user", "allowed_user,another_user", False, None),
-            (False, "not_allowed_user", "allowed_user", False, None),
-            (False, "not_allowed_user", "allowed_user,another_user", False, None),
+            (True, "allowed_user", "test_user, test_another_user", False, InvalidToggleAttribute),
+            (True, "allowed_user", ["allowed_user"], True, None),
+            (True, "allowed_user", ["allowed_user", "another_user"], True, None),
+            (True, "allowed_user", [" allowed_user", "another_user"], True, None),
+            (True, "allowed_user", ["allowed_user ", "another_user"], True, None),
+            (False, "allowed_user", ["allowed_user"], False, None),
+            (False, "allowed_user", ["allowed_user", "another_user"], False, None),
+            (True, "not_allowed_user", ["allowed_user"], False, None),
+            (True, "not_allowed_user", ["allowed_user", "another_user"], False, None),
+            (False, "not_allowed_user", ["allowed_user"], False, None),
+            (False, "not_allowed_user", ["allowed_user", "another_user"], False, None),
         ],
     )
     def test__returns_toggles_specified_in_attributes(
