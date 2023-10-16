@@ -82,8 +82,9 @@ class TestGetTogglesMethod:
     def test__get_all_toggles(
         self,
         monkeypatch,
-        add_toggles: typing.Callable[[typing.Dict[str, bool]], None],
+        mocker,
         environment_name: str,
+        dependency_factory: typing.Callable,
     ):
         monkeypatch.setenv("ENVIRONMENT", environment_name)
         toggles = {
@@ -93,32 +94,25 @@ class TestGetTogglesMethod:
                 "pilot_users_toggle": {
                     "enabled": True,
                     "type": "pilot_users",
-                    "allowed_users": "test_user,another_user"
+                    "allowed_users": "test_user,another_user",
                 },
                 "another_pilot_users_toggle": {
                     "enabled": True,
                     "type": "pilot_users",
-                    "allowed_users": "another_user"
+                    "allowed_users": "another_user",
                 },
                 "cutover_strategy": {
                     "enabled": True,
                     "type": "cutover",
-                    "date": "2023-08-20 10:00"
+                    "date": "2023-08-20 10:00",
                 },
                 "another_cutover_strategy": {
                     "enabled": True,
                     "type": "cutover",
-                    "date": "2023-08-20 16:00"
+                    "date": "2023-08-20 16:00",
                 },
             }
         }
-        add_toggles(toggles)
-        toggle_provider = YamlToggleProvider(_TOGGLES_FILE)
-        toggle_router = Router(toggle_provider)
-        context = ToggleContext(username="test_user", role="")
-
-        result = toggle_router.get_all_toggles(context=context)
-
         expected_result = {
             "some_toggle": True,
             "another_toggle": False,
@@ -127,4 +121,35 @@ class TestGetTogglesMethod:
             "cutover_strategy": True,
             "another_cutover_strategy": False,
         }
+        dependencies = dependency_factory(toggle_values=toggles[environment_name])
+        toggle_strategy_mock = mocker.Mock(
+            is_enabled=mocker.Mock(
+                side_effect=[
+                    toggle_value for _, toggle_value in expected_result.items()
+                ]
+            )
+        )
+        toggle_router = Router(**dependencies)
+        context = ToggleContext(username="test_user", role="")
+
+        strategy_factory = mocker.patch(
+            "ioet_feature_flag.router.get_toggle_strategy",
+            return_value=toggle_strategy_mock,
+        )
+
+        result = toggle_router.get_all_toggles(context=context)
+
+        dependencies["provider"].get_toggle_list.assert_called()
+        dependencies["provider"].get_toggle_attributes.assert_has_calls(
+            calls=[
+                mocker.call(toggle_name)
+                for toggle_name in toggles[environment_name].keys()
+            ]
+        )
+        strategy_factory.assert_has_calls(
+            calls=[
+                mocker.call(toggle_attributes)
+                for _, toggle_attributes in toggles[environment_name].items()
+            ]
+        )
         assert result == expected_result
