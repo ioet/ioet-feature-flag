@@ -11,7 +11,7 @@ from ioet_feature_flag.exceptions import InvalidToggleType
     [
         ({"type": "static"}, Static, None),
         ({"type": "cutover", "date": "2023-08-21 08:00"}, Cutover, None),
-        ({"type": "pilot_users", "allowed_users": "test"}, PilotUsers, None),
+        ({"type": "pilot_users", "allowed_users": ["test"]}, PilotUsers, None),
         ({"type": "non_existent_type"}, None, InvalidToggleType),
     ]
 )

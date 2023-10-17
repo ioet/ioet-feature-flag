@@ -2,3 +2,9 @@ test:
     dummy-flag:
         enabled: true
         type: static
+    user-dummy-flag:
+        enabled: true
+        type: pilot_users
+        allowed_users:
+            - test_user
+            - another_user
