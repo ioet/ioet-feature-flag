@@ -4,6 +4,7 @@ from .strategy import Strategy
 from .cutover import Cutover
 from .static import Static
 from .pilot_users import PilotUsers
+from .role_based import RoleBased
 from ..exceptions import InvalidToggleType
 
 
@@ -13,6 +14,7 @@ def get_toggle_strategy(attributes: typing.Dict) -> Strategy:
         'static': Static,
         'cutover': Cutover,
         'pilot_users': PilotUsers,
+        'role_based': RoleBased,
     }
 
     strategy: Strategy = strategies.get(toggle_type)

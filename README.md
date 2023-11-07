@@ -52,7 +52,7 @@ It is also possible to use other formats or providers, such as JSON or AWS AppCo
 
 ## Usage
 
-The library may be used in a object-oriented fashion or a functional one, please check out the examples:
+The library may be used in an object-oriented fashion or a functional one, please check out the examples:
 - [OOP usage](./usage_examples/object_oriented_usage.md)
 - [Functional usage](./usage_examples/functional_usage.md)
 
@@ -109,7 +109,7 @@ The file format is as it follows:
 2. Select your app and click on "Management Console"
 3. Search for "AWS AppConfig" and select the first option under the "Services" section
 4. Click on "Create Application" and name it as you wish
-5. Click on the "Create" button to create a profile. Here, you will need to select either "Feature Flag" or "Freeform Configuration". The difference between the two is the UI within the AWS console. "Feature Flag" is a bit friendlier to use and it's more oriented to managing feature flags. In "Freeform Configuration" you have to modify a JSON file.
+5. Click on the "Create" button to create a profile. Here, you will need to select either "Feature Flag" or "Freeform Configuration". The difference between the two is the UI within the AWS console. "Feature Flag" is a bit friendlier to use and, it's more oriented to managing feature flags. In "Freeform Configuration" you have to modify a JSON file.
 6. Once the profile is created, you will be prompted to start creating flags. "Name" is just the name of the feature flag, and "key" is how you will be able to find it in your application. In the case of "Freeform Configuration", the JSON must have this format:
 ```
 {
@@ -146,7 +146,7 @@ provider = ioet_feature_flag.AWSAppConfigToggleProvider()
 toggles = ioet_feature_flag.Toggles(provider=provider)
 ```
 ## Currently supported feature flag types
-> Please note that all flags must be under a defined enviroment. The examples on this section show only the structure needed to declare a flag.
+> Please note that all flags must be under a defined environment. The examples on this section show only the structure needed to declare a flag.
 ### Static flag
 This is the most basic type: It toggles a code path on when the flag is `enabled`. The structure for this flag on the YAML file is the following:
 ```yaml
@@ -178,6 +178,17 @@ pilot-users-flag:
     - john.doe@email.com
     - jane.doe@email.com
   ```
+
+### Role-based flag
+It enables turning a code path on for a list of roles when the flag is `enabled`. The allowed roles must be inserted on a list. The following examples shows the flag structure:
+```yaml
+role-based-flag:
+  enabled: true
+  type: role_based
+  roles:
+    - developer
+    - qa
+```
 
 ## Considerations
 - Please note that the current implementation is subject to change.
