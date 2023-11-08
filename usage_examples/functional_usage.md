@@ -2,14 +2,35 @@
 
 Example made by @eguezgustavo 
 
+## Adding feature flags
+Since it's needed to test the new feature locally, a new pair of toggles are added to the development environment in the `feature-toggles.yaml` file:
+
+```yaml
+dev:
+  isOrderCancellationEnabled:
+    type: static
+    enabled: true
+  isAutoRefundEnabled:
+    type: static
+    enabled: true
+```
+
+> **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If an environment does not have a flag declared, the library will raise an exception.
+
+## Using the library
+The feature flag library includes a decorator to mark functions as toggle routers and use them in other functions:
+
 ```python
 import ioet_feature_flag
+
+import typing
+
 
 toggles = ioet_feature_flag.Toggles()
 
 
 @toggles.toggle_decision
-def usage_of_order_cancellation_email(get_toggles, when_on, when_off, context = None):
+def usage_of_order_cancellation_email(get_toggles: typing.Callable, when_on, when_off, context: ioet_feature_flag.ToggleContext = None):
     order_cancellation_enabled, auto_refund_enabled = get_toggles(
         ["isOrderCancellationEnabled", "isAutoRefundEnable"],
         context
@@ -52,8 +73,20 @@ body = create_email_body("Gustavo", "2342937")
 print(body)
 ```
 
+> **Please note:** The function `get_toggles` used on the decision function always expects a list and **returns a tuple**. So, if you need to get a single flag, you have to send it inside a list and **unpack** the returned value.
+
+## Toggling decision without context
+
 You can also toggle between function calls without sending context, like this:
 ```python
+import ioet_feature_flag
+
+import typing
+
+
+toggles = ioet_feature_flag.Toggles()
+
+
 def gen_one_pokedex():
   # Let's imagine that this is actually an API call and
   # we want to either prevent or allow its usage
@@ -67,18 +100,48 @@ def gen_two_pokedex():
 # Here the decision function is declared with a context param
 # but when called, you may not need to send it
 @toggles.toggle_decision
-def decide_pokedex_usage(get_toggles, when_on, when_off, context = None):
+def decide_pokedex_usage(get_toggles: typing.Callable, when_on, when_off, context: ioet_feature_flag.ToggleContext = None):
     use_gen_two_pokedex = get_toggles(["useGenTwoPokedex"], context)
     if use_gen_two_pokedex:
         return when_on
     return when_off
 
 
-def client()
+def client():
   get_pokedex_list = decide_pokedex_usage(
     when_on=gen_two_pokedex,
     when_off=gen_one_pokedex,
   )
 
   pokemons = get_pokedex_list()
+```
+> **Note:** Even though sending a toggle context is optional, the parameter declaration on the decision function is *required* and needs to be defaulted to `None`.
+
+## Toggling behavior
+Providing that the environment variable is set to `dev`, the email body created with first example will look like this:
+```
+    Dear Alec,
+
+    Your order number 3456 has been approved.
+    
+    To cancel your order follow this link: http://cancel/3456
+
+    Cheers,
+
+    Your company team
+```
+
+Otherwise, it will look like this:
+
+```
+    Dear Alec,
+
+    Your order number 3456 has been approved.
+    
+
+
+    Cheers,
+
+    Your company team
+
 ```
