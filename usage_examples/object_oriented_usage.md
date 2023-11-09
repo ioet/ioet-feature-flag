@@ -30,7 +30,7 @@ dev:
     enabled: true
 ```
 
-> **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If a environment does not have a flag declared, the library will raise an exception.
+> **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If an environment does not have a flag declared, the library will raise an exception.
 
 ## Using the library in a class
 Let's add the library to `create_email_body_case.py` and use it to insert a toggle point:
@@ -45,7 +45,7 @@ class CreateEmailBodyCase2:
         self._toggles = feature_toggles
 
     # The decision function is declared to check for flags
-    # and determine the adequate codepath (when_on or when_off)
+    # and determine the adequate code path (when_on or when_off)
     @staticmethod
     def _usage_of_order_cancellation_email(get_toggles: typing.Callable, when_on, when_off, context: ToggleContext=None):
         order_cancellation_enabled, auto_refund_enabled = get_toggles(
@@ -85,6 +85,7 @@ class CreateEmailBodyCase2:
         """
 
 ```
+> **Please note:** The function `get_toggles` used on the decision function always expects a list and **returns a tuple**. So, if you need to get a single flag, you have to send it inside a list and **unpack** the returned value.
 
 Then, the dependency factory for the use case is updated:
 ```python
@@ -111,7 +112,7 @@ class CreateEmailBodyCase2:
         self._toggles = feature_toggles
 
     # The decision function is declared to check for flags
-    # and determine the adequate codepath (when_on or when_off)
+    # and determine the adequate code path (when_on or when_off)
     @staticmethod
     def _usage_of_order_cancellation_email(get_toggles: typing.Callable, when_on, when_off, context: ToggleContext=None):
         order_cancellation_enabled, auto_refund_enabled = get_toggles(
@@ -140,7 +141,7 @@ class CreateEmailBodyCase2:
 
         # A context is declared to send the user's information for
         # the toggle decision
-        toggle_context = ioet_feature_flag.ToggleContext(
+        toggle_context = ToggleContext(
             username=client_name,
             role="client"
         )
