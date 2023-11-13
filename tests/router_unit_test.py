@@ -11,14 +11,15 @@ class TestGetTogglesMethod:
     @pytest.fixture(name="dependency_factory")
     def __dependency_factory(self, mocker) -> typing.Callable:
         def _factory(toggle_values: typing.Dict):
+            def _mocked_get_toggle_attributes(toggle_name):
+                return toggle_values[toggle_name]
+
             toggle_names = toggle_values.keys()
             return {
                 "provider": mocker.Mock(
                     get_toggle_list=mocker.Mock(return_value=list(toggle_names)),
                     get_toggle_attributes=mocker.Mock(
-                        side_effect=[
-                            toggle_values[toggle_name] for toggle_name in toggle_names
-                        ]
+                        side_effect=_mocked_get_toggle_attributes,
                     ),
                 )
             }
@@ -121,3 +122,39 @@ class TestGetTogglesMethod:
             "another_cutover_strategy": False,
         }
         assert result == expected_result
+
+    def test__returns_boolean_when_one_toggle_is_specified(
+        self,
+        dependency_factory: typing.Callable,
+    ):
+        toggles = {
+            "some_toggle": {"enabled": True},
+            "another_toggle": {"enabled": False},
+        }
+
+        dependencies = dependency_factory(toggle_values=toggles)
+        toggle_router = Router(**dependencies)
+        another_toggle = toggle_router.get_toggles(
+            ["another_toggle"]
+        )
+
+        assert isinstance(another_toggle, bool)
+        assert not another_toggle
+
+    def test__accepts_receiving_a_string_for_single_flag(
+        self,
+        dependency_factory: typing.Callable,
+    ):
+        toggles = {
+            "some_toggle": {"enabled": True},
+            "another_toggle": {"enabled": False},
+        }
+
+        dependencies = dependency_factory(toggle_values=toggles)
+        toggle_router = Router(**dependencies)
+        some_toggle = toggle_router.get_toggles(
+            "some_toggle"
+        )
+
+        assert isinstance(some_toggle, bool)
+        assert some_toggle

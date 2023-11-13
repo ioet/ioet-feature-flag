@@ -32,7 +32,7 @@ class Toggles:
                 raise exceptions.InvalidDecisionFunction(
                     (
                         "when_on and when_off parameters can't be boolean. "
-                        "We have added this restriction to avoid a lot of is statements in your app"
+                        "We have added this restriction to avoid a lot of if statements in your app"
                     )
                 )
 

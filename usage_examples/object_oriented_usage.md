@@ -85,7 +85,13 @@ class CreateEmailBodyCase2:
         """
 
 ```
-> **Please note:** The function `get_toggles` used on the decision function always expects a list and **returns a tuple**. So, if you need to get a single flag, you have to send it inside a list and **unpack** the returned value.
+> **IMPORTANT NOTE:** The function `get_toggles` used on the decision function expects a list and **will return a tuple** if you pass mulltiple flags to it and **you will need to unpack it**. However, if you pass only one flag (as in, a list with just one element), **it will return a boolean** with the value of the flag that you specified. We made this decision to avoid confusion when using the result in an if statement.
+
+```python
+my_toggle_a, my_toggle_b = get_toggles(["myToggleA", "myToggleB"])  # returns a tuple
+my_toggle = get_toggles(["myToggleA"])  # returns a boolean
+my_toggle = get_toggles("myToggleA")  # also returns a boolean
+```
 
 Then, the dependency factory for the use case is updated:
 ```python
