@@ -2,6 +2,9 @@ test:
     dummy-flag:
         enabled: true
         type: static
+    disabled-flag:
+        enabled: false
+        type: static
     user-dummy-flag:
         enabled: true
         type: pilot_users

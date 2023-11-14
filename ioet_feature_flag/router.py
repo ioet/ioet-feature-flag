@@ -14,9 +14,12 @@ class Router:
 
     def get_toggles(
         self,
-        toggle_names: typing.List[str],
+        toggle_names: typing.Union[typing.List[str], str],
         toggle_context: typing.Optional[ToggleContext] = None,
-    ) -> typing.Tuple[bool, ...]:
+    ) -> typing.Union[typing.Tuple[bool, ...], bool]:
+        if isinstance(toggle_names, str):
+            toggle_names = [toggle_names]
+
         available_toggles = self._provider.get_toggle_list()
 
         missing_toogles = [
@@ -32,14 +35,19 @@ class Router:
             for toggle_name in toggle_names
         ]
 
-        toggle_types = [
+        toggle_strategies = [
             get_toggle_strategy(toggle_attribute)
             for toggle_attribute in toggle_attributes
         ]
 
-        return tuple(
-            toggle.is_enabled(context=toggle_context) for toggle in toggle_types
+        result = tuple(
+            toggle.is_enabled(context=toggle_context) for toggle in toggle_strategies
         )
+
+        if len(result) == 1:
+            return result[0]
+
+        return result
 
     def get_all_toggles(
         self,
