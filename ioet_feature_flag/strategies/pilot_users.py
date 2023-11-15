@@ -1,7 +1,11 @@
 import typing
 
 from .strategy import Strategy
-from ..exceptions import MissingToggleAttributes, InvalidToggleAttribute
+from ..exceptions import (
+    MissingToggleAttributes,
+    InvalidToggleAttribute,
+    MissingToggleContext,
+)
 from ..toggle_context import ToggleContext
 
 
@@ -24,5 +28,9 @@ class PilotUsers(Strategy):
             allowed_users=[user.strip() for user in allowed_users],
         )
 
-    def is_enabled(self, context: ToggleContext) -> bool:
+    def is_enabled(self, context: typing.Optional[ToggleContext] = None) -> bool:
+        if not context:
+            raise MissingToggleContext(
+                "Toggle context is required to compute toggle's state"
+            )
         return self._enabled and context.username in self._allowed_users

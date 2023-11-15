@@ -3,7 +3,11 @@ import typing
 import pytest
 
 from ioet_feature_flag.strategies import PilotUsers
-from ioet_feature_flag.exceptions import MissingToggleAttributes, InvalidToggleAttribute
+from ioet_feature_flag.exceptions import (
+    MissingToggleAttributes,
+    InvalidToggleAttribute,
+    MissingToggleContext,
+)
 
 
 class TestPilotUsersStrategy:
@@ -23,7 +27,13 @@ class TestPilotUsersStrategy:
         "is_enabled, current_user, allowed_users, expected_result, expected_exception",
         [
             (True, "allowed_user", "", False, MissingToggleAttributes),
-            (True, "allowed_user", "test_user, test_another_user", False, InvalidToggleAttribute),
+            (
+                True,
+                "allowed_user",
+                "test_user, test_another_user",
+                False,
+                InvalidToggleAttribute,
+            ),
             (True, "allowed_user", ["allowed_user"], True, None),
             (True, "allowed_user", ["allowed_user", "another_user"], True, None),
             (True, "allowed_user", [" allowed_user", "another_user"], True, None),
@@ -40,7 +50,7 @@ class TestPilotUsersStrategy:
         self,
         is_enabled: bool,
         current_user: str,
-        allowed_users: str,
+        allowed_users: typing.Any,
         expected_result: bool,
         expected_exception: typing.Any,
         dependency_factory: typing.Callable,
@@ -61,3 +71,17 @@ class TestPilotUsersStrategy:
                 pilot_users_strategy.is_enabled(context=toggle_context)
                 == expected_result
             )
+
+    def test__raises_an_exception__when_toggle_context_was_not_provided(
+        self,
+    ):
+        expected_error_message = "Toggle context is required to compute toggle's state"
+        attributes = {
+            "enabled": True,
+            "type": "pilot_users",
+            "allowed_users": ["allUsers"],
+        }
+        pilot_users_strategy = PilotUsers.from_attributes(attributes)
+
+        with pytest.raises(MissingToggleContext, match=expected_error_message):
+            pilot_users_strategy.is_enabled()

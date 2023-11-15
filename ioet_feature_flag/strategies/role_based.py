@@ -1,7 +1,11 @@
 import typing
 
 from .strategy import Strategy
-from ..exceptions import MissingToggleAttributes, InvalidToggleAttribute
+from ..exceptions import (
+    MissingToggleAttributes,
+    InvalidToggleAttribute,
+    MissingToggleContext,
+)
 from ..toggle_context import ToggleContext
 
 
@@ -25,6 +29,8 @@ class RoleBased(Strategy):
         )
 
     def is_enabled(self, context: typing.Optional[ToggleContext] = None) -> bool:
-        if context:
-            return self._enabled and context.role in self._allowed_roles
-        return False
+        if not context:
+            raise MissingToggleContext(
+                "Toggle context is required to compute toggle's state"
+            )
+        return self._enabled and context.role in self._allowed_roles
