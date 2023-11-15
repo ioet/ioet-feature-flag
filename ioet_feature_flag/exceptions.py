@@ -34,3 +34,10 @@ class InvalidToggleAttribute(Exception):
     Exception raised when a specific toggle attribute not valid.
     For example, when the toggle attribute "date" is not a valid date.
     """
+
+
+class MissingToggleContext(Exception):
+    """
+    Exception raised when a toggle type needs a toggle context, but it was not provided.
+    For example, when the toggle type "pilot_users" is called without a context to know the user.
+    """
