@@ -26,12 +26,7 @@ Example:
 poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
 ```
 
-If you want to, you can also clone this repository locally and install the library by specifying the folder in which the repo was cloned
-
-```shell
-poetry add /path/to/ioet-feature-flag # Absolute path
-poetry add ../ioet-feature-flag # Relative path
-```
+**IMPORTANT NOTE**: There's a fair chance that you have CI/CD pipelines in your project. Please make sure that they have the `git` command available before including this library in your project. Otherwise your pipelines **will fail**.
 
 ## Requirements
 
@@ -47,14 +42,19 @@ staging:
 ```
 The flags are going to be taken from either the `production` or `staging` section depending on the `ENVIRONMENT` env variable.
 
-It is also possible to use other formats or providers, such as JSON or AWS AppConfig, which are documented under the "Providers" section.
+It is also possible to specify a different file location, or use other formats or providers, such as JSON or AWS AppConfig. This is documented under the "Providers" section.
 
 
-## Usage
+## Backend Usage
 
 The library may be used in an object-oriented fashion or a functional one, please check out the examples:
 - [OOP usage](./usage_examples/object_oriented_usage.md)
 - [Functional usage](./usage_examples/functional_usage.md)
+
+## Frontend usage
+We also support a couple of React hooks to make use of the feature flags in the frontend.
+You will need to create an endpoint that retrieves all the flags, and install the [ioet-ui-library](https://github.com/ioet/ioet-ui-library) library.
+This is documented on the [Frontend Usage Guide](./usage_examples/frontend_usage.md) page.
 
 ## How to release version to Production
 The release process is done locally. Before you start, please make sure you have permission to
