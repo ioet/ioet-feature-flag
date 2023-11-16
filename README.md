@@ -190,5 +190,17 @@ role-based-flag:
     - qa
 ```
 
+## Exceptions
+
+This library can raise different exceptions given certain conditions:
+
+- `ToggleNotFoundError`: When the library is trying to find a feature flag that doesn't exist in the `feature_toggles.yaml` file.
+- `InvalidDecisionFunction`: When your `when_on` or `when_off` parameters are either booleans, not the same type, or a function that only returns a boolean.
+- `ToggleEnvironmentError`: When the `ENVIRONMENT` env variable is either not specified or is not found in your feature flags file.
+- `InvalidToggleType`: When a toggle type is not valid.
+- `MissingToggleAttributes`: When a specific attribute needed for a particular feature type is not specified.
+- `InvalidToggleAttribute`: When a specified attribute is not valid.
+- `MissingToggleContext`: When the toggle context is not specified for a particular feature type that requires it (such as `pilot_users` and `role_based`).
+
 ## Considerations
 - Please note that the current implementation is subject to change.
