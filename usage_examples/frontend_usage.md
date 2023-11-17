@@ -114,7 +114,7 @@ Remember that you are not limited to components, you can use any type value (exc
 
 ```tsx
 const YourComponent = () => {
-    const MyTitle = useWithFeature('useNewTitle', "Old Title", "New Title");
+    const title = useWithFeature('useNewTitle', "Old Title", "New Title");
     return (
         <>
             <MyTitle title={title} />
