@@ -66,3 +66,28 @@ class TestTogglesDecisionMethod:
             "when_on and when_off parameters can't be boolean. "
             "We have added this restriction to avoid a lot of if statements in your app"
         )
+
+    def test__raises_an_error_when_toggle_values_are_functions_that_return_boolean(self, mocker):
+        provider = mocker.Mock()
+
+        def _dummy_when_on():
+            return True
+
+        def _dummy_when_off():
+            return False
+
+        when_on = _dummy_when_on
+        when_off = _dummy_when_off
+        decision_function = mocker.Mock(return_value=when_on)
+        toggles = Toggles(provider=provider)
+
+        with pytest.raises(InvalidDecisionFunction) as error:
+            toggles.toggle_decision(decision_function)(
+                when_on=when_on, when_off=when_off
+            )
+
+        assert str(error.value) == (
+            "when_on and when_off parameters can't be "
+            "a function which only returns a boolean. "
+            "We have added this restriction to avoid a lot of if statements in your app."
+        )
