@@ -17,16 +17,24 @@ dev:
 
 > **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If an environment does not have a flag declared, the library will raise an exception.
 
+> **Info:**
+> By default, the library will search for a YAML file on `./feature_toggles/feature-toggles.yaml`.
+> To override this behavior, create a `Toggles` instance specifying the `provider` parameter.
+> This way, you can not only change the toggles path but also use any other provider described on
+> README file.
+
 ## Using the library
 The feature flag library includes a decorator to mark functions as toggle routers and use them in other functions:
 
 ```python
 import ioet_feature_flag
 
+from pathlib import Path
 import typing
 
-
-toggles = ioet_feature_flag.Toggles()
+# Here, since the project root is the containing folder of the file,
+# the feature toggles folder must be at the same level of this file
+toggles = ioet_feature_flag.Toggles(project_root=Path(__file__).parent)
 
 
 @toggles.toggle_decision
@@ -81,16 +89,24 @@ my_toggle = get_toggles(["myToggleA"])  # returns a boolean
 my_toggle = get_toggles("myToggleA")  # also returns a boolean
 ```
 
+> **Important:**
+> Please note that the Toggles class needs a `project_root: Path` parameter. This is done to make the default path 
+> of the toggles file consistent. If another path or provider needs to be used, you can do it, the project root parameter
+> will not be considered.
+
 ## Toggling decision without context
 
 You can also toggle between function calls without sending context, like this:
 ```python
 import ioet_feature_flag
 
+from pathlib import Path
 import typing
 
 
-toggles = ioet_feature_flag.Toggles()
+# Here, since the project root is the containing folder of the file,
+# the feature toggles folder must be at the same level of this file
+toggles = ioet_feature_flag.Toggles(project_root=Path(__file__).parent)
 
 
 def gen_one_pokedex():

@@ -16,6 +16,11 @@ Suppose we have an email body builder in our application. A new feature to inclu
 └── main.py
 
 ```
+> **Info:**
+> By default, the library will search for a YAML file on `./feature_toggles/feature-toggles.yaml`.
+> To override this behavior, create a `Toggles` instance specifying the `provider` parameter.
+> This way, you can not only change the toggles path but also use any other provider described on
+> README file.
 
 ## Adding feature flags
 Since it's needed to test the new feature locally, a new pair of toggles are added to the development environment in the `feature-toggles.yaml` file:
@@ -93,15 +98,33 @@ my_toggle = get_toggles(["myToggleA"])  # returns a boolean
 my_toggle = get_toggles("myToggleA")  # also returns a boolean
 ```
 
-Then, the dependency factory for the use case is updated:
+Now, the dependency factory for the use case needs to be updated to include the toggles class.
+
+> **Important:** 
+> Please note that the Toggles class needs a `project_root: Path` parameter. This is done to make the default path
+> of the toggles file consistent. If another path or provider needs to be used, you can do it, the project root parameter
+> will not be considered.
+
+For this example, project root path was declared on `dependency_factories/__init__.py`:
+```python
+from pathlib import Path
+
+
+PROJECT_ROOT: Path = Path(__file__).parent.parent
+
+```
+In the use case's dependency factory, we just add the toggles dependency liek this: 
+
 ```python
 from ioet_feature_flag import Toggles
 
 import cases
 
+from . import PROJECT_ROOT
+
 
 def get_create_email_body_case() -> cases.CreateEmailBodyCase2:
-    return cases.CreateEmailBodyCase2(feature_toggles=Toggles())
+    return cases.CreateEmailBodyCase2(feature_toggles=Toggles(project_root=PROJECT_ROOT))
 
 ```
 

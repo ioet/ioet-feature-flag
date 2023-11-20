@@ -20,7 +20,7 @@ class TestTogglesDecisionMethod:
             return_value=router,
         )
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider)
+        toggles = Toggles(provider=provider, project_root=mocker.Mock())
         toggle_context = mocker.Mock() if uses_context else None
 
         decision = toggles.toggle_decision(decision_function)
@@ -35,10 +35,15 @@ class TestTogglesDecisionMethod:
 
     def test__raises_an_error_when_toggle_values_are_from_different_types(self, mocker):
         provider = mocker.Mock()
+        router = mocker.Mock()
+        mocker.patch(
+            "ioet_feature_flag.toggles.Router",
+            return_value=router,
+        )
         when_on = 1
         when_off = "string"
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider)
+        toggles = Toggles(provider=provider, project_root=mocker.Mock())
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
@@ -52,10 +57,15 @@ class TestTogglesDecisionMethod:
 
     def test__raises_an_error_when_toggle_values_are_boolean(self, mocker):
         provider = mocker.Mock()
+        router = mocker.Mock()
+        mocker.patch(
+            "ioet_feature_flag.toggles.Router",
+            return_value=router,
+        )
         when_on = True
         when_off = False
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider)
+        toggles = Toggles(provider=provider, project_root=mocker.Mock())
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
