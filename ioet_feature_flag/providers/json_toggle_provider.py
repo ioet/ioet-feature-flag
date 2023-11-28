@@ -1,3 +1,4 @@
+from pathlib import Path
 import json
 import typing
 import os
@@ -8,7 +9,7 @@ from .provider import Provider
 
 class JsonToggleProvider(Provider):
     def __init__(self, toggles_file_path: str) -> None:
-        self._path = toggles_file_path
+        self._path: Path = Path(toggles_file_path).resolve()
         self._environment = os.getenv("ENVIRONMENT")
         self._validate_environment()
 

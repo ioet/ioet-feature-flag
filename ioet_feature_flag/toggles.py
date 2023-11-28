@@ -1,3 +1,4 @@
+from pathlib import Path
 from functools import wraps
 
 import typing
@@ -9,8 +10,10 @@ from .toggle_context import ToggleContext
 
 
 class Toggles:
-    def __init__(self, provider: typing.Optional[Provider] = None) -> None:
-        self._router = Router(provider)
+    def __init__(
+        self, project_root: Path, provider: typing.Optional[Provider] = None
+    ) -> None:
+        self._router = Router(root_dir=project_root, provider=provider)
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
         @wraps(decision_function)

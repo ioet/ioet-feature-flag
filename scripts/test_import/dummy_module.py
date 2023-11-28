@@ -1,6 +1,7 @@
+from pathlib import Path
 import ioet_feature_flag
 
-toggles = ioet_feature_flag.Toggles()
+toggles = ioet_feature_flag.Toggles(project_root=Path(__file__).parent)
 
 
 @toggles.toggle_decision

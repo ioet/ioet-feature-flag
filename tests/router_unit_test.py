@@ -1,6 +1,9 @@
-import pytest
+from pathlib import Path
 import typing
 from freezegun import freeze_time
+
+import pytest
+from faker import Faker
 
 from ioet_feature_flag.exceptions import ToggleNotFoundError
 from ioet_feature_flag.router import Router
@@ -9,7 +12,7 @@ from ioet_feature_flag.toggle_context import ToggleContext
 
 class TestGetTogglesMethod:
     @pytest.fixture(name="dependency_factory")
-    def __dependency_factory(self, mocker) -> typing.Callable:
+    def __dependency_factory(self, mocker, faker: Faker) -> typing.Callable:
         def _factory(toggle_values: typing.Dict):
             def _mocked_get_toggle_attributes(toggle_name):
                 return toggle_values[toggle_name]
@@ -21,7 +24,8 @@ class TestGetTogglesMethod:
                     get_toggle_attributes=mocker.Mock(
                         side_effect=_mocked_get_toggle_attributes,
                     ),
-                )
+                ),
+                "root_dir": Path(faker.file_path()),
             }
 
         return _factory
@@ -94,17 +98,17 @@ class TestGetTogglesMethod:
             "another_pilot_users_toggle": {
                 "enabled": True,
                 "type": "pilot_users",
-                "allowed_users": ["another_user"]
+                "allowed_users": ["another_user"],
             },
             "cutover_strategy": {
                 "enabled": True,
                 "type": "cutover",
-                "date": "2023-08-20 10:00"
+                "date": "2023-08-20 10:00",
             },
             "another_cutover_strategy": {
                 "enabled": True,
                 "type": "cutover",
-                "date": "2023-08-20 16:00"
+                "date": "2023-08-20 16:00",
             },
         }
         dependencies = dependency_factory(toggle_values=toggles)
@@ -134,9 +138,7 @@ class TestGetTogglesMethod:
 
         dependencies = dependency_factory(toggle_values=toggles)
         toggle_router = Router(**dependencies)
-        another_toggle = toggle_router.get_toggles(
-            ["another_toggle"]
-        )
+        another_toggle = toggle_router.get_toggles(["another_toggle"])
 
         assert isinstance(another_toggle, bool)
         assert not another_toggle
@@ -152,9 +154,7 @@ class TestGetTogglesMethod:
 
         dependencies = dependency_factory(toggle_values=toggles)
         toggle_router = Router(**dependencies)
-        some_toggle = toggle_router.get_toggles(
-            "some_toggle"
-        )
+        some_toggle = toggle_router.get_toggles("some_toggle")
 
         assert isinstance(some_toggle, bool)
         assert some_toggle
