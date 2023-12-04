@@ -8,6 +8,24 @@ from .provider import Provider
 
 
 class JsonToggleProvider(Provider):
+    """
+    Provider for .json feature toggle files.
+
+    This provider expects the file to have the following format
+
+    {
+        "yourEnvironment": {
+            "yourToggleName": {
+                "enabled": true,
+                "type": "static"
+            }
+        }
+    }
+
+    You must set the `ENVIRONMENT` env variable and it must match
+    `"yourEnvironment"`, otherwise it will throw an exception.
+    """
+
     def __init__(self, toggles_file_path: str) -> None:
         self._path: Path = Path(toggles_file_path).resolve()
         self._environment = os.getenv("ENVIRONMENT")

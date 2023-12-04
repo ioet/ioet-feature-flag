@@ -2,6 +2,13 @@ import typing
 
 
 class ToggleContext:
+    """
+    Class used to provide context to the toggle router.
+
+    This class is necessary when you have feature toggles that depend
+    on user information, such as username or role.
+    """
+
     def __init__(
         self, username: str, role: str, **attributes: typing.Dict[str, typing.Any]
     ) -> None:

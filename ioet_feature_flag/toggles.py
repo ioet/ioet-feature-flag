@@ -16,6 +16,13 @@ class Toggles:
         self._router = Router(root_dir=project_root, provider=provider)
 
     def toggle_decision(self, decision_function: types.TOOGLE_DECISION):
+        """
+        Decorator function for your toggle point.
+
+        :raises InvalidDecisionFunction: This exception is thrown when either
+            `when_on` and `when_off` are different types, or when any of them are booleans
+        """
+
         @wraps(decision_function)
         def _wraps(
             when_on: types.TOGGLED_VALUE,
@@ -48,5 +55,24 @@ class Toggles:
     def get_all_toggles(
         self,
         context: typing.Optional[ToggleContext] = None,
-    ):
+    ) -> typing.Dict[str, bool]:
+        """
+        Returns a list of all the toggles in the following format:
+
+        ```
+        {
+            "my_toggle": True,
+            "my_other_toggle": False,
+        }
+        ```
+
+        Considerations:
+        1. It only gets the toggles for the current environment,
+           the one defined by the `ENVIRONMENT` env variable.
+        2. Although the `context` parameter is optional, most of the
+           times you will actually need to provide it, otherwise
+           this function will throw an exception if you have the
+           `pilot_users` or `role_based` feature types.
+        """
+
         return self._router.get_all_toggles(context)
