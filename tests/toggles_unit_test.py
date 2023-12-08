@@ -79,6 +79,11 @@ class TestTogglesDecisionMethod:
 
     def test__raises_an_error_when_toggle_values_are_functions_that_return_boolean(self, mocker):
         provider = mocker.Mock()
+        router = mocker.Mock()
+        mocker.patch(
+            "ioet_feature_flag.toggles.Router",
+            return_value=router,
+        )
 
         def _dummy_when_on():
             return True
@@ -89,7 +94,7 @@ class TestTogglesDecisionMethod:
         when_on = _dummy_when_on
         when_off = _dummy_when_off
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider)
+        toggles = Toggles(provider=provider, project_root=mocker.Mock())
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
