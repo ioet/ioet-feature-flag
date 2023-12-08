@@ -59,7 +59,7 @@ class Router:
     def get_all_toggles(
         self,
         context: typing.Optional[ToggleContext] = None,
-    ):
+    ) -> typing.Dict[str, bool]:
         available_toggles = self._provider.get_toggle_list()
 
         raw_toggles = {

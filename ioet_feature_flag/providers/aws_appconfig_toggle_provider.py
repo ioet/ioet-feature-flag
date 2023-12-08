@@ -6,6 +6,24 @@ from .provider import Provider
 
 
 class AWSAppConfigToggleProvider(Provider):
+    """
+    Provider for AWS AppConfig.
+
+    The instructions to set up AWS AppConfig
+    here: https://github.com/ioet/ioet-feature-flag/tree/main#aws-appconfig
+
+    The following env variables must be set in order for this provider
+    to work:
+
+    AWS_APPCONFIG_APP=your-appconfig-app-name
+    AWS_APPCONFIG_ENV=your-appconfig-environment
+    AWS_APPCONFIG_PROFILE=your-appconfig-profile
+    AWS_DEFAULT_REGION=us-east-2
+    AWS_ACCESS_KEY_ID="your-access-key-id"
+    AWS_SECRET_ACCESS_KEY="your-access-key"
+    AWS_SESSION_TOKEN="your-session-token"
+    """
+
     def __init__(self) -> None:
         self._appconfig = AppConfigHelper(
             os.environ["AWS_APPCONFIG_APP"],

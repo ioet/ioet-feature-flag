@@ -8,6 +8,20 @@ from .provider import Provider
 
 
 class YamlToggleProvider(Provider):
+    """
+    Provider for .yaml feature toggle files.
+
+    This provider expects the file to have the following format
+
+    your_environment:
+        your_toggle_name:
+            enabled: true
+            type: static
+
+    You must set the `ENVIRONMENT` env variable and it must match
+    `your_environment"`, otherwise it will throw an exception.
+    """
+
     def __init__(self, toggles_file_path: str) -> None:
         self._path: Path = Path(toggles_file_path).resolve()
         self._environment = os.getenv("ENVIRONMENT")
