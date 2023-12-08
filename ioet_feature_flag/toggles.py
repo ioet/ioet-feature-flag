@@ -7,6 +7,7 @@ from . import exceptions, types
 from .providers import Provider
 from .router import Router
 from .toggle_context import ToggleContext
+from .helpers import validators
 
 
 class Toggles:
@@ -22,7 +23,7 @@ class Toggles:
             when_off: types.TOGGLED_VALUE,
             context: typing.Optional[ToggleContext] = None,
         ):
-            if str(type(when_on)) != str(type(when_off)):
+            if validators.are_args_different_types(when_on, when_off):
                 raise exceptions.InvalidDecisionFunction(
                     (
                         "when_on and when_off parameters must be of the same type. "
@@ -31,12 +32,17 @@ class Toggles:
                     )
                 )
 
-            if isinstance(when_on, bool) or isinstance(when_off, bool):
+            if validators.are_args_boolean(when_on, when_off):
                 raise exceptions.InvalidDecisionFunction(
-                    (
-                        "when_on and when_off parameters can't be boolean. "
-                        "We have added this restriction to avoid a lot of if statements in your app"
-                    )
+                    "when_on and when_off parameters can't be boolean. "
+                    "We have added this restriction to avoid a lot of if statements in your app"
+                )
+
+            if validators.are_args_invalid_functions(when_on, when_off):
+                raise exceptions.InvalidDecisionFunction(
+                    "when_on and when_off parameters can't be "
+                    "a function which only returns a boolean. "
+                    "We have added this restriction to avoid a lot of if statements in your app."
                 )
 
             return decision_function(
