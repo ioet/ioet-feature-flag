@@ -15,23 +15,28 @@ Second, in your backend application, you have to define an endpoint. It can have
 }
 ```
 
-The `Toggles` class has a method `get_all_toggles` made for this purpose, so your endpoint will sort of look like this:
+The `Toggles` class has a `get_all_toggles` method made for this purpose, so your endpoint will sort of look like this:
 
 ```python
 import ioet_feature_flag
 
-toggles = ioet_feature_flag.Toggles()
+provider = ioet_feature_flag.YamlToggleProvider('./feature_toggles/feature-toggles.yaml')
+toggles = ioet_feature_flag.Toggles(provider)
 
 @router.get("/feature-flags")
 async def get_feature_flags():
-	return JSONResponse(
-		status_code=200,
-		content=toggles.get_all_toggles(context=context)
-	)
+    return JSONResponse(
+        status_code=200,
+        content=toggles.get_all_toggles(context=context)
+    )
 ```
 
-You don't need to re-initialize `ioet_feature_flag.Toggles()` for this, you can define your `toggles` object anywhere and then import it. This is just to illustrate the example.
+If you wish, you can also have a different source of feature flags for the frontend:
 
+```python
+provider = ioet_feature_flag.YamlToggleProvider('./feature_toggles/frontend-feature-toggles.yaml')
+toggles = ioet_feature_flag.Toggles(provider)
+```
 
 ## Usage
 

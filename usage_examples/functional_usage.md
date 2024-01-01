@@ -3,7 +3,9 @@
 Example made by @eguezgustavo 
 
 ## Adding feature flags
-Since it's needed to test the new feature locally, a new pair of toggles are added to the development environment in the `feature-toggles.yaml` file:
+Since it's needed to test the new feature locally, a new pair of toggles are added to the development environment.
+
+Here's an example for a Yaml file:
 
 ```yaml
 dev:
@@ -15,13 +17,8 @@ dev:
     enabled: true
 ```
 
-> **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If an environment does not have a flag declared, the library will raise an exception.
+> **Note:** Both flags need to be declared as false in any other environment that isn't meant to have the feature yet. If an environment does not have a flag declared, **the library will raise an exception**.
 
-> **Info:**
-> By default, the library will search for a YAML file on `./feature_toggles/feature-toggles.yaml`.
-> To override this behavior, create a `Toggles` instance specifying the `provider` parameter.
-> This way, you can not only change the toggles path but also use any other provider described on
-> README file.
 
 ## Using the library
 The feature flag library includes a decorator to mark functions as toggle routers and use them in other functions:
@@ -29,12 +26,10 @@ The feature flag library includes a decorator to mark functions as toggle router
 ```python
 import ioet_feature_flag
 
-from pathlib import Path
 import typing
 
-# Here, since the project root is the containing folder of the file,
-# the feature toggles folder must be at the same level of this file
-toggles = ioet_feature_flag.Toggles(project_root=Path(__file__).parent)
+provider = ioet_feature_flag.YamlToggleProvider('./feature_toggles/feature-toggles.yaml')
+toggles = ioet_feature_flag.Toggles(provider)
 
 
 @toggles.toggle_decision
@@ -89,24 +84,45 @@ my_toggle = get_toggles(["myToggleA"])  # returns a boolean
 my_toggle = get_toggles("myToggleA")  # also returns a boolean
 ```
 
-> **Important:**
-> Please note that the Toggles class needs a `project_root: Path` parameter. This is done to make the default path 
-> of the toggles file consistent. If another path or provider needs to be used, you can do it, the project root parameter
-> will not be considered.
+## Toggling behavior
+Providing that the environment variable is set to `dev`, the email body created with first example will look like this:
+```
+    Dear Alec,
+
+    Your order number 3456 has been approved.
+    
+    To cancel your order follow this link: http://cancel/3456
+
+    Cheers,
+
+    Your company team
+```
+
+Otherwise, it will look like this:
+
+```
+    Dear Alec,
+
+    Your order number 3456 has been approved.
+    
+
+
+    Cheers,
+
+    Your company team
+
+```
+
 
 ## Toggling decision without context
 
 You can also toggle between function calls without sending context, like this:
 ```python
 import ioet_feature_flag
-
-from pathlib import Path
 import typing
 
-
-# Here, since the project root is the containing folder of the file,
-# the feature toggles folder must be at the same level of this file
-toggles = ioet_feature_flag.Toggles(project_root=Path(__file__).parent)
+provider = ioet_feature_flag.YamlToggleProvider('./feature_toggles/feature-toggles.yaml')
+toggles = ioet_feature_flag.Toggles()
 
 
 def gen_one_pokedex():
@@ -138,32 +154,3 @@ def client():
   pokemons = get_pokedex_list()
 ```
 > **Note:** Even though sending a toggle context is optional, the parameter declaration on the decision function is *required* and needs to be defaulted to `None`.
-
-## Toggling behavior
-Providing that the environment variable is set to `dev`, the email body created with first example will look like this:
-```
-    Dear Alec,
-
-    Your order number 3456 has been approved.
-    
-    To cancel your order follow this link: http://cancel/3456
-
-    Cheers,
-
-    Your company team
-```
-
-Otherwise, it will look like this:
-
-```
-    Dear Alec,
-
-    Your order number 3456 has been approved.
-    
-
-
-    Cheers,
-
-    Your company team
-
-```

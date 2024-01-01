@@ -1,10 +1,12 @@
 # ioet Feature Flags
 
 Feature Flags library to standardize feature toggles across our Internal Apps.
-The current implementation is pretty bare-bones and only checks whether the flag is enabled or not.
-However, we aim to follow [this standard](https://martinfowler.com/articles/feature-toggles.html) as our framework.
+We are aim to follow [this standard](https://martinfowler.com/articles/feature-toggles.html) as our framework.
 
-Moreover, we are planning to support [AWS AppConfig](https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html) as the main feature flag provider. However, we may support other providers in the future.
+The default provider that we support is a Yaml or Json file hosted in the project's repo.
+However, we also support other providers such as [AWS AppConfig](https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html). We may support other providers in the future.
+
+The supported providers are listed in the [Providers](#providers) section.
 
 
 ## Installation
@@ -30,7 +32,7 @@ poetry add git+ssh://git@github.com/ioet/ioet-feature-flag.git#<branch-or-tag>
 
 ## Requirements
 
-By default, the library attempts to read a file located at `./feature_toggles/feature-toggles.yaml`, so make sure to create a file in that location with the following format:
+Create a yaml file. It can be located anywhere you want, for example, at `./feature_toggles/feature-toggles.yaml`. Make sure that it has the following format:
 ```
 production:
   some_toggle:
@@ -42,7 +44,7 @@ staging:
 ```
 The flags are going to be taken from either the `production` or `staging` section depending on the `ENVIRONMENT` env variable.
 
-It is also possible to specify a different file location, or use other formats or providers, such as JSON or AWS AppConfig. This is documented under the "Providers" section.
+It is also possible to specify a different file location, or use other formats or providers, such as JSON or AWS AppConfig. This is documented in the [Providers](#providers) section.
 
 
 ## Backend Usage

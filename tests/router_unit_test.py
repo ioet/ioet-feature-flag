@@ -1,9 +1,7 @@
-from pathlib import Path
 import typing
 from freezegun import freeze_time
 
 import pytest
-from faker import Faker
 
 from ioet_feature_flag.exceptions import ToggleNotFoundError
 from ioet_feature_flag.router import Router
@@ -12,7 +10,7 @@ from ioet_feature_flag.toggle_context import ToggleContext
 
 class TestGetTogglesMethod:
     @pytest.fixture(name="dependency_factory")
-    def __dependency_factory(self, mocker, faker: Faker) -> typing.Callable:
+    def __dependency_factory(self, mocker) -> typing.Callable:
         def _factory(toggle_values: typing.Dict):
             def _mocked_get_toggle_attributes(toggle_name):
                 return toggle_values[toggle_name]
@@ -25,7 +23,6 @@ class TestGetTogglesMethod:
                         side_effect=_mocked_get_toggle_attributes,
                     ),
                 ),
-                "root_dir": Path(faker.file_path()),
             }
 
         return _factory
