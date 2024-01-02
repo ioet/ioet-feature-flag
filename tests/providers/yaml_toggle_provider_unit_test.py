@@ -3,6 +3,7 @@ import pytest
 import os
 import typing
 
+from pathlib import Path
 from ioet_feature_flag.providers import YamlToggleProvider, Provider
 from ioet_feature_flag.exceptions import ToggleNotFoundError, ToggleEnvironmentError
 
@@ -49,7 +50,10 @@ class TestYamlToggleProvider:
         }
         add_toggles(toggles)
 
-        toggle_provider: Provider = YamlToggleProvider(_TOGGLES_FILE)
+        toggle_provider: Provider = YamlToggleProvider(
+            project_root_dir=Path("/"),
+            toggles_file_path=Path(_TOGGLES_FILE),
+        )
         toggle_list = toggle_provider.get_toggle_list()
 
         assert toggle_list == ["another_toggle", "some_toggle"]
@@ -68,7 +72,10 @@ class TestYamlToggleProvider:
             }
         }
         add_toggles(toggles)
-        toggle_provider: Provider = YamlToggleProvider(_TOGGLES_FILE)
+        toggle_provider: Provider = YamlToggleProvider(
+            project_root_dir=Path("/"),
+            toggles_file_path=Path(_TOGGLES_FILE),
+        )
 
         some_toggle_attributes = toggle_provider.get_toggle_attributes("some_toggle")
 
@@ -88,7 +95,10 @@ class TestYamlToggleProvider:
             }
         }
         add_toggles(toggles)
-        toggle_provider: Provider = YamlToggleProvider(_TOGGLES_FILE)
+        toggle_provider: Provider = YamlToggleProvider(
+            project_root_dir=Path("/"),
+            toggles_file_path=Path(_TOGGLES_FILE),
+        )
 
         with pytest.raises(ToggleNotFoundError) as error:
             toggle_provider.get_toggle_attributes("another_toggle")
@@ -110,7 +120,10 @@ class TestYamlToggleProvider:
         add_toggles(toggles)
 
         with pytest.raises(ToggleEnvironmentError) as error:
-            YamlToggleProvider(_TOGGLES_FILE)
+            YamlToggleProvider(
+                project_root_dir=Path("/"),
+                toggles_file_path=Path(_TOGGLES_FILE),
+            )
 
         assert str(error.value) == "Could not retrieve toggles: Toggle environment not specified."
 
@@ -130,7 +143,10 @@ class TestYamlToggleProvider:
         add_toggles(toggles)
 
         with pytest.raises(ToggleEnvironmentError) as error:
-            YamlToggleProvider(_TOGGLES_FILE)
+            YamlToggleProvider(
+                project_root_dir=Path("/"),
+                toggles_file_path=Path(_TOGGLES_FILE),
+            )
 
         expected_message = (
             f"The environment {environment_name} was not found "

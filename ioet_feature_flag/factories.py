@@ -10,7 +10,7 @@ def default_toggles() -> Toggles:
     return yaml_toggles()
 
 def yaml_toggles(
-    toggles_file_path: Path = "./feature_toggles/feature-toggles.yaml",
+    toggles_file_path: Path = Path("./feature_toggles/feature-toggles.yaml"),
     project_root_dir: typing.Optional[Path] = None,
 ) -> Toggles:
     provider = YamlToggleProvider(
@@ -20,7 +20,7 @@ def yaml_toggles(
     return Toggles(provider=provider)
 
 def json_toggles(
-    toggles_file_path: Path = "./feature_toggles/feature-toggles.json",
+    toggles_file_path: Path = Path("./feature_toggles/feature-toggles.json"),
     project_root_dir: typing.Optional[Path] = None,
 ) -> Toggles:
     provider = JsonToggleProvider(
