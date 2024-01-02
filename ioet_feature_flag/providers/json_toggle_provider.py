@@ -26,8 +26,12 @@ class JsonToggleProvider(Provider):
     `"yourEnvironment"`, otherwise it will throw an exception.
     """
 
-    def __init__(self, toggles_file_path: str) -> None:
-        self._path: Path = Path(toggles_file_path).resolve()
+    def __init__(
+        self,
+        project_root_dir: Path,
+        toggles_file_path: Path,
+    ) -> None:
+        self._path: Path = Path(project_root_dir, toggles_file_path).resolve()
         self._environment = os.getenv("ENVIRONMENT")
         self._validate_environment()
 

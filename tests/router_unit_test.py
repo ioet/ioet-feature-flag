@@ -25,7 +25,6 @@ class TestGetTogglesMethod:
                         side_effect=_mocked_get_toggle_attributes,
                     ),
                 ),
-                "root_dir": Path(faker.file_path()),
             }
 
         return _factory
