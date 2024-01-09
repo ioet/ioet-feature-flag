@@ -4,7 +4,11 @@ import os
 import typing
 
 from ioet_feature_flag.providers import JsonToggleProvider, Provider
-from ioet_feature_flag.exceptions import ToggleNotFoundError, ToggleEnvironmentError
+from ioet_feature_flag.exceptions import (
+    ToggleNotFoundError,
+    ToggleEnvironmentError,
+    InvalidToggleFileFormat,
+)
 
 _TOGGLES_FILE = "/tmp/app_toggles_test.json"
 
@@ -44,7 +48,7 @@ class TestJsonToggleProvider:
         toggles = {
             environment_name: {
                 "some_toggle": {"enabled": True},
-                "another_toggle": {"enabled": False}
+                "another_toggle": {"enabled": False},
             }
         }
         add_toggles(toggles)
@@ -62,11 +66,7 @@ class TestJsonToggleProvider:
         monkeypatch,
     ):
         monkeypatch.setenv("ENVIRONMENT", environment_name)
-        toggles = {
-            environment_name: {
-                "some_toggle": {"enabled": True}
-            }
-        }
+        toggles = {environment_name: {"some_toggle": {"enabled": True}}}
         add_toggles(toggles)
         toggle_provider: Provider = JsonToggleProvider(_TOGGLES_FILE)
 
@@ -136,4 +136,21 @@ class TestJsonToggleProvider:
             f"The environment {environment_name} was not found "
             f"in the provided {_TOGGLES_FILE} toggles file."
         )
+        assert str(error.value) == expected_message
+
+    @pytest.mark.parametrize(
+        "invalid_format", [["toogle_a"], "toggle_a"], ids=["sequence", "scalar"]
+    )
+    def test_load_toggles_from_file_raises_error_when_file_format_invalid(
+        self, monkeypatch, invalid_format: typing.Union[typing.List, str]
+    ):
+        monkeypatch.setenv("ENVIRONMENT", "dev")
+        invalid_file_path = "/tmp/invalid_toggle_file"
+        with open(invalid_file_path, "w") as toggles_file:
+            json.dump(invalid_format, toggles_file)
+
+        with pytest.raises(InvalidToggleFileFormat) as error:
+            JsonToggleProvider(invalid_file_path)
+
+        expected_message = "The toggle file specified has an invalid format"
         assert str(error.value) == expected_message

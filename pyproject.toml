@@ -42,3 +42,6 @@ build_command="python release_version_tools/setup.py sdist bdist_wheel"
 branch = "main"
 version_variable = "release_version_tools/setup.py:__version__"
 upload_to_repository = false
+
+[tool.black]
+line_length = 100

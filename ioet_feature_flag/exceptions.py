@@ -41,3 +41,10 @@ class MissingToggleContext(Exception):
     Exception raised when a toggle type needs a toggle context, but it was not provided.
     For example, when the toggle type "pilot_users" is called without a context to know the user.
     """
+
+
+class InvalidToggleFileFormat(Exception):
+    """
+    Exception raised when a toggle file does not return a dict-like object.
+    For example, when the toggle file is just a list of values or a scalar
+    """
