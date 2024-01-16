@@ -1,23 +1,17 @@
-import os
-from pathlib import Path
 import typing
 
-from .providers import Provider, YamlToggleProvider
+from .providers import Provider
 from .exceptions import ToggleNotFoundError
 from .strategies import get_toggle_strategy
 from .toggle_context import ToggleContext
-
-_TOGGLES_LOCATION: typing.List[str] = ["feature_toggles", "feature-toggles.yaml"]
 
 
 class Router:
     def __init__(
         self,
-        root_dir: Path,
-        provider: typing.Optional[Provider] = None,
+        provider: Provider,
     ):
-        toggles_location = os.path.join(root_dir, *_TOGGLES_LOCATION)
-        self._provider = provider or YamlToggleProvider(toggles_location)
+        self._provider = provider
 
     def get_toggles(
         self,

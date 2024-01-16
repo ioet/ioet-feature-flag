@@ -20,7 +20,7 @@ class TestTogglesDecisionMethod:
             return_value=router,
         )
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider, project_root=mocker.Mock())
+        toggles = Toggles(provider=provider)
         toggle_context = mocker.Mock() if uses_context else None
 
         decision = toggles.toggle_decision(decision_function)
@@ -43,7 +43,7 @@ class TestTogglesDecisionMethod:
         when_on = 1
         when_off = "string"
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider, project_root=mocker.Mock())
+        toggles = Toggles(provider=provider)
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
@@ -65,7 +65,7 @@ class TestTogglesDecisionMethod:
         when_on = True
         when_off = False
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider, project_root=mocker.Mock())
+        toggles = Toggles(provider=provider)
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
@@ -94,7 +94,7 @@ class TestTogglesDecisionMethod:
         when_on = _dummy_when_on
         when_off = _dummy_when_off
         decision_function = mocker.Mock(return_value=when_on)
-        toggles = Toggles(provider=provider, project_root=mocker.Mock())
+        toggles = Toggles(provider=provider)
 
         with pytest.raises(InvalidDecisionFunction) as error:
             toggles.toggle_decision(decision_function)(
