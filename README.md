@@ -206,3 +206,4 @@ This library can raise different exceptions given certain conditions:
 
 ## Considerations
 - Please note that the current implementation is subject to change.
+- After performing load tests with the file-based providers, it was found that the YAML provider is slower than the JSON provider. This provider might become a performance bottleneck when used on projects with more than 300 feature toggles (provided that the project had 5 environments defined). JSON provider does not have the same issues, so take this into consideration when choosing a file format for feature flags. 
