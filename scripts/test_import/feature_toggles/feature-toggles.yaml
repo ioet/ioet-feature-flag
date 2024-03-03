@@ -11,3 +11,6 @@ test:
         allowed_users:
             - test_user
             - another_user
+    is_new_greetings_message_enabled:
+        enabled: true
+        type: static
