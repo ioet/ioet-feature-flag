@@ -2,3 +2,5 @@ from .provider import Provider
 from .aws_appconfig_toggle_provider import AWSAppConfigToggleProvider
 from .json_toggle_provider import JsonToggleProvider
 from .yaml_toggle_provider import YamlToggleProvider
+from .git_remote_providers.yaml_git_remote_provider import YamlGitRemoteProvider
+from .git_remote_providers.json_git_remote_provider import JsonGitRemoteProvider
