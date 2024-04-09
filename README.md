@@ -192,6 +192,16 @@ role-based-flag:
     - qa
 ```
 
+### User percentage flag
+It enables turning a code path on for a percentage (`p`) of users from the whole population, whislt the rest of the population
+ (`1-p`) won't be able to see the feaure. Salt can be any string value. The following example shows the flag structure:
+ ```yaml
+ percentage-based-flag:
+  type: percentage
+  percentage: 14.03
+  salt: ticket_id
+ ```
+
 ## Exceptions
 
 This library can raise different exceptions given certain conditions:

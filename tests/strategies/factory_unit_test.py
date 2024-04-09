@@ -1,9 +1,14 @@
 import pytest
 
-
-from ioet_feature_flag.strategies import get_toggle_strategy
-from ioet_feature_flag.strategies import Static, Cutover, PilotUsers, RoleBased
 from ioet_feature_flag.exceptions import InvalidToggleType
+from ioet_feature_flag.strategies import (
+    Cutover,
+    PilotUsers,
+    RoleBased,
+    Static,
+    UserPercentage,
+    get_toggle_strategy,
+)
 
 
 @pytest.mark.parametrize(
@@ -13,8 +18,9 @@ from ioet_feature_flag.exceptions import InvalidToggleType
         ({"type": "cutover", "date": "2023-08-21 08:00"}, Cutover, None),
         ({"type": "pilot_users", "allowed_users": ["test"]}, PilotUsers, None),
         ({"type": "role_based", "roles": ["tester"]}, RoleBased, None),
+        ({"type": "percentage", "percentage": 20.0, "salt": "FF-43"}, UserPercentage, None),
         ({"type": "non_existent_type"}, None, InvalidToggleType),
-    ]
+    ],
 )
 def test_get_toggle_strategy(attributes, expected_result, expected_exception):
     attributes["enabled"] = True
