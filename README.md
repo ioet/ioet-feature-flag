@@ -104,6 +104,32 @@ The file format is as it follows:
 }
 ```
 
+### Remote Git providers
+
+We have two remote git providers: `JsonGitRemoteProvider` and `YamlGitRemoteProvider`. The only difference between them is just the file format and extension that they expect to read.
+
+Unless you are using a public git repository, you must generate a Github token and export it in an env variable.
+You can follow the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) to generate one.
+**Make sure to give it all the `repo` permissions and the `read:org` permission**.
+
+Once you have your token ready, you can initialize it like so:
+```python
+provider = ioet_feature_flag.YamlGitRemoteProvider(
+  environment="prod",
+  project_id="your-app-name",
+  token=os.getenv("GITHUB_TOKEN"),
+)
+toggles = ioet_feature_flag.Toggles(provider=provider)
+```
+The default `base_url` parameter is `https://raw.githubusercontent.com/ioet/feature-flag-repository/main/`, but you can specify another one if you wish.
+
+Another optional parameter is `cache_ttl_seconds`, which defines how often the provider is allowed to perform an HTTP request to fetch the feature flags file.
+By default it has a value of `300` seconds (5 minutes).
+
+The effective URL is going to resolve to `https://raw.githubusercontent.com/ioet/feature-flag-repository/main/{project_id}/{environment}.yaml`.
+
+We are going to have more details about the format and structure of the files in the `ioet/feature-flag-repository` repo.
+
 ### AWS AppConfig
 
 **Setting up AWS AppConfig manually:**
@@ -216,4 +242,5 @@ This library can raise different exceptions given certain conditions:
 
 ## Considerations
 - Please note that the current implementation is subject to change.
+- If something goes wrong when setting up the Feature Flag library, feel free to get in touch with the Feature Flag team to help you with your issue.
 - After performing load tests with the file-based providers, it was found that the YAML provider is slower than the JSON provider. This provider might become a performance bottleneck when used on projects with more than 300 feature toggles (provided that the project had 5 environments defined). JSON provider does not have the same issues, so take this into consideration when choosing a file format for feature flags. 
