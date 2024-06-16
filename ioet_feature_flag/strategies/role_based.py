@@ -33,4 +33,5 @@ class RoleBased(Strategy):
             raise MissingToggleContext(
                 "Toggle context is required to compute toggle's state"
             )
+
         return self._enabled and context.role in self._allowed_roles

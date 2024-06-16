@@ -33,4 +33,5 @@ class PilotUsers(Strategy):
             raise MissingToggleContext(
                 "Toggle context is required to compute toggle's state"
             )
+
         return self._enabled and context.username in self._allowed_users
