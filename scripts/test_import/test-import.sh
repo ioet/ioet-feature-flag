@@ -25,6 +25,5 @@ function test_import_pip() {
     cd ../ioet-feature-flag
 }
 
-CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-test_import_poetry $CURRENT_BRANCH
-test_import_pip $CURRENT_BRANCH
+test_import_poetry $BRANCH_NAME
+test_import_pip $BRANCH_NAME
