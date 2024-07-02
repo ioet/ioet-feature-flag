@@ -1,0 +1,24 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+'Dependencies
+System(talent_management_system, "Talent Management System")
+
+' ioet feature flag library
+System_Boundary(ff, "Feature Flag Library") {
+    Container(toggle_provider, "Toggle Provider", "Parses information about a toggle, such as name or its attributes")
+    Container(toggle_point, "Toggle Point", "Determines which code path should be returned based on the dependent toggles")
+    Container(toggle_router, "Toggle Router", "Gets the toggles' state, using context if provided")
+    Container(toggle_strategy, "Toggle strategy", "Computes the toggle's state based on the its attributes")
+}
+
+' Systems relations
+Rel(talent_management_system, toggle_point, "Defines code paths under one or more feature toggles")
+Rel(talent_management_system, toggle_point, "Provides toggle configuration data")
+Rel(toggle_point, toggle_router, "Uses")
+Rel(toggle_router, toggle_provider, "Uses")
+Rel(toggle_router, toggle_strategy,  "Uses")
+Rel(toggle_provider, talent_management_system, "Reads toggle configuration data from a local or remote source")
+Rel(toggle_point, talent_management_system, "Executes an encapsulated piece of code based on toggles' context and type")
+
+@enduml
