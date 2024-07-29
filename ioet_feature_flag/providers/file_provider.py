@@ -8,9 +8,13 @@ from .provider import Provider
 
 
 class FileBasedProvider(Provider, abc.ABC):
-    def __init__(self, toggles_file_path: str) -> None:
+    def __init__(
+        self,
+        toggles_file_path: str,
+        environment: typing.Optional[str] = None,
+    ) -> None:
         self._path: Path = Path(toggles_file_path).resolve()
-        self._environment = os.getenv("ENVIRONMENT")
+        self._environment = environment or os.getenv("ENVIRONMENT")
         self._validate_environment()
 
     @abc.abstractmethod

@@ -94,14 +94,24 @@ toggles = ioet_feature_flag.Toggles(provider=provider)
 The file format is as it follows:
 ```
 {
-  "your_feature": {
-    "enabled": true
-  },
-  "another_feature": {
-    "enabled": false,
-    "type": "standard"
+  "development": {
+    "your_feature": {
+      "enabled": true
+    },
+    "another_feature": {
+      "enabled": false,
+      "type": "standard"
+    }
   }
 }
+```
+
+`"development"` comes from the `ENVIRONMENT` env variable. If you desire to use another env variable to specify which environment to use, you can specify the `environment` parameter, like so:
+```
+provider = ioet_feature_flag.JsonToggleProvider(
+  toggles_file_path="./your/toggles.json",
+  environment=os.getenv("OTHER_ENV_VARIABLE")
+)
 ```
 
 ### Remote Git providers
