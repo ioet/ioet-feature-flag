@@ -3,7 +3,7 @@ set -eo pipefail
 
 function test_import_poetry() {
     cd ../
-    poetry new test-project-poetry && cd test-project-poetry
+    poetry new test-tag-project-poetry && cd test-tag-project-poetry
     poetry add git+https://git@github.com/ioet/ioet-feature-flag.git@$1
     poetry add pytest
     export ENVIRONMENT="test"
@@ -15,7 +15,7 @@ function test_import_poetry() {
 
 function test_import_pip() {
     cd ../
-    mkdir test-project-pip && cd test-project-pip
+    mkdir test-tag-project-pip && cd test-tag-project-pip
     python -m venv env && source env/bin/activate
     pip install git+https://github.com/ioet/ioet-feature-flag.git@$1
     pip install -U pytest
@@ -25,5 +25,6 @@ function test_import_pip() {
     cd ../ioet-feature-flag
 }
 
-test_import_poetry $BRANCH_NAME
-test_import_pip $BRANCH_NAME
+
+test_import_poetry $1
+test_import_pip $1

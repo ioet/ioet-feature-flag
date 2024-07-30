@@ -39,6 +39,13 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   ssh-key: "${{ secrets.COMMIT_KEY }}"
 
+            - name: Fetch tags
+              run: git fetch --tags
+
+            - name: Get latest tag
+              run: |
+                echo "latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+
             - name: Install poetry
               run: python -m pip install poetry==1.5.1
 
@@ -61,5 +68,8 @@ jobs:
             - name: Run test
               run: poetry run pytest -v
 
-            - name: Test library import
-              run: ./scripts/test_import/test-import.sh
+            - name: Test library branch import
+              run: ./scripts/test_import/test-branch-import.sh
+
+            - name: Test library tag import
+              run: ./scripts/test_import/test-tag-import.sh ${{ env.latest_tag }}
